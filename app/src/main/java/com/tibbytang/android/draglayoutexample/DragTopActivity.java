@@ -94,6 +94,11 @@ public class DragTopActivity extends AppCompatActivity implements View.OnClickLi
                     Toast.makeText(DragTopActivity.this, "滑动到左边", Toast.LENGTH_SHORT).show();
                 }
             }
+
+            @Override
+            public void onDragViewClick(int position, boolean isOpen) {
+
+            }
         });
     }
 

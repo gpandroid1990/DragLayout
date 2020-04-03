@@ -94,6 +94,11 @@ public class DragBottomActivity extends AppCompatActivity implements View.OnClic
                     Toast.makeText(DragBottomActivity.this, "滑动到左边", Toast.LENGTH_SHORT).show();
                 }
             }
+
+            @Override
+            public void onDragViewClick(int position, boolean isOpen) {
+
+            }
         });
     }
 
@@ -130,10 +135,10 @@ public class DragBottomActivity extends AppCompatActivity implements View.OnClic
             mDragLayout.moveBottomViewToBottomEdge();
         }
         if (v == mCenterView) {
-            mDragLayout.moveBottomViewWithRatio(1.0f/2.0f);
+            mDragLayout.moveBottomViewWithRatio(1.0f / 2.0f);
         }
-        if (v==mThirdView){
-            mDragLayout.moveBottomViewWithRatio(1.0f/3.0f);
+        if (v == mThirdView) {
+            mDragLayout.moveBottomViewWithRatio(1.0f / 3.0f);
         }
     }
 

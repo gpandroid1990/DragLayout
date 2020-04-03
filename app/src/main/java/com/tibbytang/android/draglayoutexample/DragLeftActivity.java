@@ -94,6 +94,17 @@ public class DragLeftActivity extends AppCompatActivity implements View.OnClickL
                     Toast.makeText(DragLeftActivity.this, "滑动到左边", Toast.LENGTH_SHORT).show();
                 }
             }
+
+            @Override
+            public void onDragViewClick(int position, boolean isOpen) {
+                if (position == 0) {
+                    if (isOpen) {
+                        mDragLayout.moveLeftViewToLeftEdge();
+                    } else {
+                        mDragLayout.moveLeftViewToRightEdge();
+                    }
+                }
+            }
         });
     }
 
@@ -130,10 +141,10 @@ public class DragLeftActivity extends AppCompatActivity implements View.OnClickL
             mDragLayout.moveLeftViewToRightEdge();
         }
         if (v == mCenterView) {
-            mDragLayout.moveLeftViewWithRatio(1.0f/2.0f);
+            mDragLayout.moveLeftViewWithRatio(1.0f / 2.0f);
         }
-        if (v==mThirdView){
-            mDragLayout.moveLeftViewWithRatio(1.0f/3.0f);
+        if (v == mThirdView) {
+            mDragLayout.moveLeftViewWithRatio(1.0f / 3.0f);
         }
     }
 

@@ -94,6 +94,17 @@ public class DragRightActivity extends AppCompatActivity implements View.OnClick
                     Toast.makeText(DragRightActivity.this, "滑动到左边", Toast.LENGTH_SHORT).show();
                 }
             }
+
+            @Override
+            public void onDragViewClick(int position, boolean isOpen) {
+                if (position == 1) {
+                    if (isOpen) {
+                        mDragLayout.moveRightViewToRightEdge();
+                    } else {
+                        mDragLayout.moveRightViewWithRatio(1.0f/3.0f);
+                    }
+                }
+            }
         });
     }
 

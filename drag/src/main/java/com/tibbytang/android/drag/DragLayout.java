@@ -4,8 +4,10 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewConfiguration;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -44,10 +46,16 @@ public class DragLayout extends FrameLayout implements View.OnTouchListener {
     private boolean mIsRightOpen = false;
     private boolean mIsTopOpen = false;
     private boolean mIsBottomOpen = false;
+    private int mDownX = 0;
+    private int mDownY = 0;
+    private int mMoveX = 0;
+    private int mMoveY = 0;
+    private long mMoveTime = 0;
     // 最小阈值 拖拽到右边触发边缘检测距离
     private static final int MIN_DISTANCE = 0;
     // 最小移动距离 判断是否打开
     private static final int MIN_OPEN_DISTANCE = 2;
+
     private DragStateListener mDragListener;
 
     public DragLayout(@NonNull Context context) {
@@ -355,8 +363,12 @@ public class DragLayout extends FrameLayout implements View.OnTouchListener {
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 mLastX = (int) event.getRawX();
+                mDownX = (int) event.getX();
+                mDownY = (int) event.getY();
+                mMoveX = 0;
+                mMoveY = 0;
+                mMoveTime = System.currentTimeMillis();
                 break;
-
             case MotionEvent.ACTION_MOVE:
                 int rawX = (int) event.getRawX();
                 XLog.d(TAG + " rawX=" + rawX);
@@ -365,9 +377,17 @@ public class DragLayout extends FrameLayout implements View.OnTouchListener {
                 mLeftWidth += distance;
                 moveLeftView(mLeftWidth);
                 mLastX = rawX;
+                mMoveX += Math.abs(event.getX() - mDownX);
+                mMoveY += Math.abs(event.getY() - mDownY);
+                mDownX = (int) event.getX();
+                mDownY = (int) event.getY();
                 break;
             case MotionEvent.ACTION_UP:
-            case MotionEvent.ACTION_CANCEL:
+                mMoveTime = System.currentTimeMillis() - mMoveTime;
+                if (mMoveTime < ViewConfiguration.getTapTimeout() && mMoveX < 10 && mMoveY < 10) {
+                    // 点击事件
+                    mDragListener.onDragViewClick(0, mIsLeftOpen);
+                }
                 break;
         }
     }
@@ -381,6 +401,11 @@ public class DragLayout extends FrameLayout implements View.OnTouchListener {
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 mLastX = (int) event.getRawX();
+                mDownX = (int) event.getX();
+                mDownY = (int) event.getY();
+                mMoveX = 0;
+                mMoveY = 0;
+                mMoveTime = System.currentTimeMillis();
                 break;
 
             case MotionEvent.ACTION_MOVE:
@@ -391,9 +416,17 @@ public class DragLayout extends FrameLayout implements View.OnTouchListener {
                 mRightWidth += distance;
                 moveRightView(mRightWidth);
                 mLastX = rawX;
+                mMoveX += Math.abs(event.getX() - mDownX);
+                mMoveY += Math.abs(event.getY() - mDownY);
+                mDownX = (int) event.getX();
+                mDownY = (int) event.getY();
                 break;
             case MotionEvent.ACTION_UP:
-            case MotionEvent.ACTION_CANCEL:
+                mMoveTime = System.currentTimeMillis() - mMoveTime;
+                if (mMoveTime < ViewConfiguration.getTapTimeout() && mMoveX < 10 && mMoveY < 10) {
+                    // 点击事件
+                    mDragListener.onDragViewClick(1, mIsRightOpen);
+                }
                 break;
         }
     }
@@ -407,6 +440,11 @@ public class DragLayout extends FrameLayout implements View.OnTouchListener {
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 mLastY = (int) event.getRawY();
+                mDownX = (int) event.getX();
+                mDownY = (int) event.getY();
+                mMoveX = 0;
+                mMoveY = 0;
+                mMoveTime = System.currentTimeMillis();
                 break;
 
             case MotionEvent.ACTION_MOVE:
@@ -417,9 +455,17 @@ public class DragLayout extends FrameLayout implements View.OnTouchListener {
                 mTopHeight += distance;
                 moveTopView(mTopHeight);
                 mLastY = rawY;
+                mMoveX += Math.abs(event.getX() - mDownX);
+                mMoveY += Math.abs(event.getY() - mDownY);
+                mDownX = (int) event.getX();
+                mDownY = (int) event.getY();
                 break;
             case MotionEvent.ACTION_UP:
-            case MotionEvent.ACTION_CANCEL:
+                mMoveTime = System.currentTimeMillis() - mMoveTime;
+                if (mMoveTime < ViewConfiguration.getTapTimeout() && mMoveX < 10 && mMoveY < 10) {
+                    // 点击事件
+                    mDragListener.onDragViewClick(2, mIsTopOpen);
+                }
                 break;
         }
     }
@@ -433,6 +479,11 @@ public class DragLayout extends FrameLayout implements View.OnTouchListener {
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 mLastY = (int) event.getRawY();
+                mDownX = (int) event.getX();
+                mDownY = (int) event.getY();
+                mMoveX = 0;
+                mMoveY = 0;
+                mMoveTime = System.currentTimeMillis();
                 break;
 
             case MotionEvent.ACTION_MOVE:
@@ -443,9 +494,17 @@ public class DragLayout extends FrameLayout implements View.OnTouchListener {
                 mBottomHeight += distance;
                 moveBottomView(mBottomHeight);
                 mLastY = rawY;
+                mMoveX += Math.abs(event.getX() - mDownX);
+                mMoveY += Math.abs(event.getY() - mDownY);
+                mDownX = (int) event.getX();
+                mDownY = (int) event.getY();
                 break;
             case MotionEvent.ACTION_UP:
-            case MotionEvent.ACTION_CANCEL:
+                mMoveTime = System.currentTimeMillis() - mMoveTime;
+                if (mMoveTime < ViewConfiguration.getTapTimeout() && mMoveX < 10 && mMoveY < 10) {
+                    // 点击事件
+                    mDragListener.onDragViewClick(3, mIsBottomOpen);
+                }
                 break;
         }
     }
@@ -550,11 +609,25 @@ public class DragLayout extends FrameLayout implements View.OnTouchListener {
      * 拖拽事件监听器
      */
     public interface DragStateListener {
-        // 当状态变更时监听
+        /**
+         * 当状态变更时监听
+         *
+         * @param dragState
+         */
         void onDragStateChanged(DragState dragState);
 
-        // 拖拽到边缘监听
+        /**
+         * 拖拽到边缘监听
+         *
+         * @param dragEdgeState
+         */
         void onDragEdgeChanged(DragEdgeState dragEdgeState);
+
+        /**
+         * @param position 对应拖拽按钮方向 0为left 1为right 2为top 3 为bottom
+         * @param isOpen   面板是否打开
+         */
+        void onDragViewClick(int position, boolean isOpen);
     }
 
     /**
