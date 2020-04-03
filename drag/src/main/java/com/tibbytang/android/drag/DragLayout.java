@@ -1,4 +1,4 @@
-package com.tibbytang.android.draglayoutexample;
+package com.tibbytang.android.drag;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -36,29 +36,30 @@ public class DragLayout extends FrameLayout implements View.OnTouchListener {
     private int mBottomHeight = 0;
     private int mLastX = -1;
     private int mLastY = -1;
+    private boolean mIsScrollToLeft = false;
+    private boolean mIsScrollToRight = false;
+    private boolean mIsScrollToTop = false;
+    private boolean mIsScrollToBottom = false;
+    private boolean mIsLeftOpen = false;
+    private boolean mIsRightOpen = false;
+    private boolean mIsTopOpen = false;
+    private boolean mIsBottomOpen = false;
+    // 最小阈值 拖拽到右边触发边缘检测距离
+    private static final int MIN_DISTANCE = 0;
+    // 最小移动距离 判断是否打开
+    private static final int MIN_OPEN_DISTANCE = 2;
     private DragStateListener mDragListener;
 
     public DragLayout(@NonNull Context context) {
         super(context);
-        init();
     }
 
     public DragLayout(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
-        init();
     }
 
     public DragLayout(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        init();
-    }
-
-    public DragLayout(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-        super(context, attrs, defStyleAttr, defStyleRes);
-        init();
-    }
-
-    private void init() {
     }
 
     public void addDragStateListener(DragStateListener dragListener) {
@@ -68,15 +69,15 @@ public class DragLayout extends FrameLayout implements View.OnTouchListener {
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
-        mLeftDragContentLayout = findViewById(R.id.main_left_layout);
-        mRightDragContentLayout = findViewById(R.id.main_right_layout);
-        mTopDragContentLayout = findViewById(R.id.main_top_layout);
-        mBottomDragContentLayout = findViewById(R.id.main_bottom_layout);
+        mLeftDragContentLayout = findViewById(R.id.drag_left_content_view);
+        mRightDragContentLayout = findViewById(R.id.drag_right_content_view);
+        mTopDragContentLayout = findViewById(R.id.drag_top_content_view);
+        mBottomDragContentLayout = findViewById(R.id.drag_bottom_content_view);
 
-        mLeftDragView = findViewById(R.id.main_drag_left_view);
-        mRightDragView = findViewById(R.id.main_drag_right_view);
-        mTopDragView = findViewById(R.id.main_drag_top_view);
-        mBottomDragView = findViewById(R.id.main_drag_bottom_view);
+        mLeftDragView = findViewById(R.id.drag_left_view);
+        mRightDragView = findViewById(R.id.drag_right_view);
+        mTopDragView = findViewById(R.id.drag_top_view);
+        mBottomDragView = findViewById(R.id.drag_bottom_view);
         initLeftDragview();
         initRightDragview();
         initTopDragView();
@@ -131,6 +132,25 @@ public class DragLayout extends FrameLayout implements View.OnTouchListener {
                 layoutParams.width = mLeftWidth;
             }
             mLeftDragContentLayout.setLayoutParams(layoutParams);
+            // 判断是否拖拽到边缘
+            if (mLeftWidth >= (getWidth() - MIN_DISTANCE)) {
+                if (null != mDragListener && !mIsScrollToRight) {
+                    mIsScrollToRight = true;
+                    mDragListener.onDragEdgeChanged(DragEdgeState.DRAG_STATE_LEFT_TO_RIGHT_EDGE);
+                }
+            } else {
+                mIsScrollToRight = false;
+            }
+            // 判断是否打开
+            if (mLeftWidth > MIN_OPEN_DISTANCE && !mIsLeftOpen && null != mDragListener) {
+                mIsLeftOpen = true;
+                mDragListener.onDragStateChanged(DragState.DRAG_STATE_LEFT_OPEN);
+            }
+            // 判断是否关闭
+            if (mLeftWidth <= 0 && mIsLeftOpen && null != mDragListener) {
+                mIsLeftOpen = false;
+                mDragListener.onDragStateChanged(DragState.DRAG_STATE_LEFT_CLOSE);
+            }
         }
     }
 
@@ -142,24 +162,37 @@ public class DragLayout extends FrameLayout implements View.OnTouchListener {
                 layoutParams.width = 0;
             } else if (width > getWidth()) {
                 layoutParams.width = getWidth();
+                if (null != mDragListener && !mIsScrollToLeft) {
+                    mIsScrollToLeft = true;
+                    mDragListener.onDragEdgeChanged(DragEdgeState.DRAG_STATE_RIGHT_TO_LEFT_EDGE);
+                }
             } else {
                 layoutParams.width = width;
             }
             mRightDragContentLayout.setLayoutParams(layoutParams);
+
+            // 判断是否拖拽到边缘
+            if (mRightWidth >= (getWidth() - MIN_DISTANCE)) {
+                if (null != mDragListener && !mIsScrollToLeft) {
+                    mIsScrollToLeft = true;
+                    mDragListener.onDragEdgeChanged(DragEdgeState.DRAG_STATE_RIGHT_TO_LEFT_EDGE);
+                }
+            } else {
+                mIsScrollToLeft = false;
+            }
+            // 判断是否打开
+            if (mRightWidth > MIN_OPEN_DISTANCE && !mIsRightOpen && null != mDragListener) {
+                mIsRightOpen = true;
+                mDragListener.onDragStateChanged(DragState.DRAG_STATE_RIGHT_OPEN);
+            }
+            // 判断是否关闭
+            if (mRightWidth <= 0 && mIsRightOpen && null != mDragListener) {
+                mIsRightOpen = false;
+                mDragListener.onDragStateChanged(DragState.DRAG_STATE_RIGHT_CLOSE);
+            }
         }
     }
 
-    private void moveDistance(int width) {
-
-    }
-
-    public void moveLeft() {
-        mWidth = 0;
-        moveDistance(0);
-        if (null != mDragListener) {
-            mDragListener.onDragStateChanged(DragState.DRAG_STATE_TO_LEFT);
-        }
-    }
 
     public void moveTopView(int height) {
         XLog.d(TAG + " moveTopView height=" + height);
@@ -169,10 +202,33 @@ public class DragLayout extends FrameLayout implements View.OnTouchListener {
                 layoutParams.height = 0;
             } else if (height > getHeight()) {
                 layoutParams.height = getHeight();
+                if (null != mDragListener && !mIsScrollToBottom) {
+                    mIsScrollToBottom = true;
+                    mDragListener.onDragEdgeChanged(DragEdgeState.DRAG_STATE_TOP_TO_BOTTOM_EDGE);
+                }
             } else {
                 layoutParams.height = height;
             }
             mTopDragContentLayout.setLayoutParams(layoutParams);
+            // 判断是否拖拽到边缘
+            if (mTopHeight >= (getHeight() - MIN_DISTANCE)) {
+                if (null != mDragListener && !mIsScrollToTop) {
+                    mIsScrollToTop = true;
+                    mDragListener.onDragEdgeChanged(DragEdgeState.DRAG_STATE_TOP_TO_BOTTOM_EDGE);
+                }
+            } else {
+                mIsScrollToTop = false;
+            }
+            // 判断是否打开
+            if (mTopHeight > MIN_OPEN_DISTANCE && !mIsTopOpen && null != mDragListener) {
+                mIsTopOpen = true;
+                mDragListener.onDragStateChanged(DragState.DRAG_STATE_TOP_OPEN);
+            }
+            // 判断是否关闭
+            if (mTopHeight <= 0 && mIsTopOpen && null != mDragListener) {
+                mIsTopOpen = false;
+                mDragListener.onDragStateChanged(DragState.DRAG_STATE_TOP_CLOSE);
+            }
         }
     }
 
@@ -184,29 +240,34 @@ public class DragLayout extends FrameLayout implements View.OnTouchListener {
                 layoutParams.height = 0;
             } else if (height > getHeight()) {
                 layoutParams.height = getHeight();
+                if (null != mDragListener && !mIsScrollToTop) {
+                    mIsScrollToTop = true;
+                    mDragListener.onDragEdgeChanged(DragEdgeState.DRAG_STATE_BOTTOM_TO_TOP_EDGE);
+                }
             } else {
                 layoutParams.height = height;
             }
             mBottomDragContentLayout.setLayoutParams(layoutParams);
+            // 判断是否拖拽到边缘
+            if (mBottomHeight >= (getHeight() - MIN_DISTANCE)) {
+                if (null != mDragListener && !mIsScrollToBottom) {
+                    mIsScrollToBottom = true;
+                    mDragListener.onDragEdgeChanged(DragEdgeState.DRAG_STATE_BOTTOM_TO_TOP_EDGE);
+                }
+            } else {
+                mIsScrollToBottom = false;
+            }
+            // 判断是否打开
+            if (mBottomHeight > MIN_OPEN_DISTANCE && !mIsBottomOpen && null != mDragListener) {
+                mIsBottomOpen = true;
+                mDragListener.onDragStateChanged(DragState.DRAG_STATE_BOTTOM_OPEN);
+            }
+            // 判断是否关闭
+            if (mBottomHeight <= 0 && mIsBottomOpen && null != mDragListener) {
+                mIsBottomOpen = false;
+                mDragListener.onDragStateChanged(DragState.DRAG_STATE_BOTTOM_CLOSE);
+            }
         }
-    }
-
-    public void moveRight() {
-        mWidth = getWidth();
-        moveDistance(mWidth);
-        if (null != mDragListener) {
-            mDragListener.onDragStateChanged(DragState.DRAG_STATE_TO_RIGHT);
-        }
-    }
-
-    public void moveCenter() {
-        mWidth = getWidth() / 2;
-        moveDistance(mWidth);
-    }
-
-    public void moveThird() {
-        mWidth = getWidth() / 3;
-        moveDistance(mWidth);
     }
 
     @Override
@@ -223,10 +284,8 @@ public class DragLayout extends FrameLayout implements View.OnTouchListener {
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         super.onLayout(changed, left, top, right, bottom);
         XLog.d(TAG + " onLayout");
-
         int childCount = getChildCount();
         XLog.d(TAG + " childCount=" + childCount);
-
         for (int i = 0; i < childCount; i++) {
             View childView = getChildAt(i);
             int measureWidth = childView.getMeasuredWidth();
@@ -309,7 +368,6 @@ public class DragLayout extends FrameLayout implements View.OnTouchListener {
                 break;
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_CANCEL:
-
                 break;
         }
     }
@@ -336,7 +394,6 @@ public class DragLayout extends FrameLayout implements View.OnTouchListener {
                 break;
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_CANCEL:
-
                 break;
         }
     }
@@ -363,7 +420,6 @@ public class DragLayout extends FrameLayout implements View.OnTouchListener {
                 break;
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_CANCEL:
-
                 break;
         }
     }
@@ -390,34 +446,150 @@ public class DragLayout extends FrameLayout implements View.OnTouchListener {
                 break;
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_CANCEL:
-
                 break;
         }
     }
 
     /**
-     * 拖拽监听
+     * 拖动左边面板到左边缘
      */
-    interface DragStateListener {
+    public void moveLeftViewToLeftEdge() {
+        mLeftWidth = 0;
+        moveLeftView(mLeftWidth);
+    }
+
+    /**
+     * 拖动左边面板到右边缘
+     */
+    public void moveLeftViewToRightEdge() {
+        mLeftWidth = getWidth();
+        moveLeftView(getWidth());
+    }
+
+    /**
+     * 拖动左边面板到响应比例位置处
+     */
+    public void moveLeftViewWithRatio(float ratio) {
+        mLeftWidth = (int) (getWidth() * ratio);
+        moveLeftView(mLeftWidth);
+    }
+
+    /**
+     * 拖动右边面板到左边缘
+     */
+    public void moveRightViewToLeftEdge() {
+        mRightWidth = getWidth();
+        moveRightView(getWidth());
+    }
+
+    /**
+     * 拖动右边面板到右边缘
+     */
+    public void moveRightViewToRightEdge() {
+        mRightWidth = 0;
+        moveRightView(mRightWidth);
+    }
+
+    /**
+     * 拖动右边面板到响应比例位置处
+     */
+    public void moveRightViewWithRatio(float ratio) {
+        mRightWidth = (int) (getWidth() * ratio);
+        moveRightView(mRightWidth);
+    }
+
+    /**
+     * 拖动顶部面板到顶部
+     */
+    public void moveTopViewToTopEdge() {
+        mTopHeight = 0;
+        moveTopView(mTopHeight);
+    }
+
+    /**
+     * 拖动顶部面板到底部
+     */
+    public void moveTopViewToBottomEdge() {
+        mTopHeight = getHeight();
+        moveTopView(mTopHeight);
+    }
+
+    /**
+     * 拖动顶部面板到响应比例位置处
+     */
+    public void moveTopViewWithRatio(float ratio) {
+        mTopHeight = (int) (getHeight() * ratio);
+        moveTopView(mTopHeight);
+    }
+
+    /**
+     * 拖动底部面板到顶部
+     */
+    public void moveBottomViewToTopEdge() {
+        mBottomHeight = getHeight();
+        moveBottomView(mBottomHeight);
+    }
+
+    /**
+     * 拖动顶部面板到底部
+     */
+    public void moveBottomViewToBottomEdge() {
+        mBottomHeight = 0;
+        moveBottomView(mBottomHeight);
+    }
+
+    /**
+     * 拖动顶部面板到响应比例位置处
+     */
+    public void moveBottomViewWithRatio(float ratio) {
+        mBottomHeight = (int) (getHeight() * ratio);
+        moveBottomView(mBottomHeight);
+    }
+
+    /**
+     * 拖拽事件监听器
+     */
+    public interface DragStateListener {
         // 当状态变更时监听
         void onDragStateChanged(DragState dragState);
+
+        // 拖拽到边缘监听
+        void onDragEdgeChanged(DragEdgeState dragEdgeState);
     }
 
     /**
      * 滑动状态
      */
-    enum DragState {
-        // 滑动到左边
-        DRAG_STATE_TO_LEFT,
-        // 滑动到右边
-        DRAG_STATE_TO_RIGHT,
-        // 滑动到顶部
-        DRAG_STATE_TO_TOP,
-        // 滑动到底部
-        DRAG_STATE_TO_BOTTOM,
-        // 左边打开
+    public enum DragEdgeState {
+        // 左边滑动到右边
+        DRAG_STATE_LEFT_TO_RIGHT_EDGE,
+        // 右边滑动到左边
+        DRAG_STATE_RIGHT_TO_LEFT_EDGE,
+        // 顶部滑动到顶部
+        DRAG_STATE_TOP_TO_BOTTOM_EDGE,
+        // 底部滑动到顶部
+        DRAG_STATE_BOTTOM_TO_TOP_EDGE,
+    }
+
+    /**
+     * 打开关闭状态
+     */
+    public enum DragState {
+        // 左边面板打开
         DRAG_STATE_LEFT_OPEN,
-        // 左边关闭
+        // 左边面板关闭
         DRAG_STATE_LEFT_CLOSE,
+        // 右边面板打开
+        DRAG_STATE_RIGHT_OPEN,
+        // 右边面板关闭
+        DRAG_STATE_RIGHT_CLOSE,
+        // 顶部面板打开
+        DRAG_STATE_TOP_OPEN,
+        // 顶部面板关闭
+        DRAG_STATE_TOP_CLOSE,
+        // 底部面板打开
+        DRAG_STATE_BOTTOM_OPEN,
+        // 底部面板关闭
+        DRAG_STATE_BOTTOM_CLOSE,
     }
 }
