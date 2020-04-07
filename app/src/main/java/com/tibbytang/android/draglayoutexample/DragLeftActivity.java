@@ -96,12 +96,12 @@ public class DragLeftActivity extends AppCompatActivity implements View.OnClickL
             }
 
             @Override
-            public void onDragViewClick(int position, boolean isOpen) {
+            public void onDragViewClick(View view, int position, boolean isOpen) {
                 if (position == 0) {
                     if (isOpen) {
-                        mDragLayout.moveLeftViewToLeftEdge();
+                        mDragLayout.moveLeftViewWithRatio(0.0f);
                     } else {
-                        mDragLayout.moveLeftViewToRightEdge();
+                        mDragLayout.moveLeftViewWithRatio(1.0f);
                     }
                 }
             }
@@ -135,10 +135,10 @@ public class DragLeftActivity extends AppCompatActivity implements View.OnClickL
     public void onClick(View v) {
 
         if (v == mLeftView) {
-            mDragLayout.moveLeftViewToLeftEdge();
+            mDragLayout.moveLeftViewWithRatio(0.0f);
         }
         if (v == mRightView) {
-            mDragLayout.moveLeftViewToRightEdge();
+            mDragLayout.moveLeftViewWithRatio(1.0f);
         }
         if (v == mCenterView) {
             mDragLayout.moveLeftViewWithRatio(1.0f / 2.0f);

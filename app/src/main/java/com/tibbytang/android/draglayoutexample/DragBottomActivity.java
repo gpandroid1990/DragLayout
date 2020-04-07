@@ -96,7 +96,7 @@ public class DragBottomActivity extends AppCompatActivity implements View.OnClic
             }
 
             @Override
-            public void onDragViewClick(int position, boolean isOpen) {
+            public void onDragViewClick(View view,int position, boolean isOpen) {
 
             }
         });
@@ -129,10 +129,10 @@ public class DragBottomActivity extends AppCompatActivity implements View.OnClic
     public void onClick(View v) {
 
         if (v == mTopView) {
-            mDragLayout.moveBottomViewToTopEdge();
+            mDragLayout.moveBottomViewWithRatio(1.0f);
         }
         if (v == mBottomView) {
-            mDragLayout.moveBottomViewToBottomEdge();
+            mDragLayout.moveBottomViewWithRatio(0.0f);
         }
         if (v == mCenterView) {
             mDragLayout.moveBottomViewWithRatio(1.0f / 2.0f);

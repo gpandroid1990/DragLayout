@@ -96,7 +96,7 @@ public class DragTopActivity extends AppCompatActivity implements View.OnClickLi
             }
 
             @Override
-            public void onDragViewClick(int position, boolean isOpen) {
+            public void onDragViewClick(View view,int position, boolean isOpen) {
 
             }
         });
@@ -129,10 +129,10 @@ public class DragTopActivity extends AppCompatActivity implements View.OnClickLi
     public void onClick(View v) {
 
         if (v == mTopView) {
-            mDragLayout.moveTopViewToTopEdge();
+            mDragLayout.moveTopViewWithRatio(0.0f);
         }
         if (v == mBottomView) {
-            mDragLayout.moveTopViewToBottomEdge();
+            mDragLayout.moveTopViewWithRatio(1.0f);
         }
         if (v == mCenterView) {
             mDragLayout.moveTopViewWithRatio(1.0f/2.0f);

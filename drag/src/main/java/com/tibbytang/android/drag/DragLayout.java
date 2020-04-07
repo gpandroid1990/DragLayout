@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.ViewConfiguration;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -30,8 +29,6 @@ public class DragLayout extends FrameLayout implements View.OnTouchListener {
     private LinearLayout mRightDragView;
     private LinearLayout mTopDragView;
     private LinearLayout mBottomDragView;
-
-    private int mWidth = 0;
     private int mLeftWidth = 0;
     private int mRightWidth = 0;
     private int mTopHeight = 0;
@@ -55,7 +52,10 @@ public class DragLayout extends FrameLayout implements View.OnTouchListener {
     private static final int MIN_DISTANCE = 0;
     // 最小移动距离 判断是否打开
     private static final int MIN_OPEN_DISTANCE = 2;
-
+    // 判断单击还是move
+    private static final long TAP_TIME_OUT = 500L;
+    // 移动距离
+    private static final int MOVE_DISTANCE = 10;
     private DragStateListener mDragListener;
 
     public DragLayout(@NonNull Context context) {
@@ -202,7 +202,7 @@ public class DragLayout extends FrameLayout implements View.OnTouchListener {
     }
 
 
-    public void moveTopView(int height) {
+    private void moveTopView(int height) {
         XLog.d(TAG + " moveTopView height=" + height);
         if (null != mTopDragView && mTopDragContentLayout != null) {
             LayoutParams layoutParams = (LayoutParams) mTopDragContentLayout.getLayoutParams();
@@ -240,7 +240,7 @@ public class DragLayout extends FrameLayout implements View.OnTouchListener {
         }
     }
 
-    public void moveBottomView(int height) {
+    private void moveBottomView(int height) {
         XLog.d(TAG + " moveBottomView height=" + height + " getHeight()=" + getHeight());
         if (null != mBottomDragView && mBottomDragContentLayout != null) {
             LayoutParams layoutParams = (LayoutParams) mBottomDragContentLayout.getLayoutParams();
@@ -340,16 +340,16 @@ public class DragLayout extends FrameLayout implements View.OnTouchListener {
     @Override
     public boolean onTouch(View v, MotionEvent event) {
         if (v == mLeftDragView) {
-            handleLeftDragViewTouchEvent(event);
+            handleLeftDragViewTouchEvent(v, event);
         }
         if (v == mRightDragView) {
-            handleRightDragViewTouchEvent(event);
+            handleRightDragViewTouchEvent(v, event);
         }
         if (v == mTopDragView) {
-            handleTopDragViewTouchEvent(event);
+            handleTopDragViewTouchEvent(v, event);
         }
         if (v == mBottomDragView) {
-            handleBottomDragViewTouchEvent(event);
+            handleBottomDragViewTouchEvent(v, event);
         }
         return true;
     }
@@ -359,7 +359,7 @@ public class DragLayout extends FrameLayout implements View.OnTouchListener {
      *
      * @param event
      */
-    private void handleLeftDragViewTouchEvent(MotionEvent event) {
+    private void handleLeftDragViewTouchEvent(View view, MotionEvent event) {
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 mLastX = (int) event.getRawX();
@@ -368,6 +368,7 @@ public class DragLayout extends FrameLayout implements View.OnTouchListener {
                 mMoveX = 0;
                 mMoveY = 0;
                 mMoveTime = System.currentTimeMillis();
+                XLog.d(TAG + "按下 time=" + mMoveTime);
                 break;
             case MotionEvent.ACTION_MOVE:
                 int rawX = (int) event.getRawX();
@@ -383,10 +384,15 @@ public class DragLayout extends FrameLayout implements View.OnTouchListener {
                 mDownY = (int) event.getY();
                 break;
             case MotionEvent.ACTION_UP:
-                mMoveTime = System.currentTimeMillis() - mMoveTime;
-                if (mMoveTime < ViewConfiguration.getTapTimeout() && mMoveX < 10 && mMoveY < 10) {
+                long time = System.currentTimeMillis();
+                XLog.d(TAG + "抬起 time=" + time);
+                mMoveTime = time - mMoveTime;
+                XLog.d(TAG + "抬起 mMoveTime=" + mMoveTime + " TAP_TIME_OUT=" + TAP_TIME_OUT + " mMoveX=" + mMoveX + " mMoveY=" + mMoveY);
+                if (mMoveTime < TAP_TIME_OUT && mMoveX < MOVE_DISTANCE && mMoveY < MOVE_DISTANCE) {
                     // 点击事件
-                    mDragListener.onDragViewClick(0, mIsLeftOpen);
+                    if (FastClickUtil.isNotFastClick()) {
+                        mDragListener.onDragViewClick(view, 0, mIsLeftOpen);
+                    }
                 }
                 break;
         }
@@ -397,7 +403,7 @@ public class DragLayout extends FrameLayout implements View.OnTouchListener {
      *
      * @param event
      */
-    private void handleRightDragViewTouchEvent(MotionEvent event) {
+    private void handleRightDragViewTouchEvent(View view, MotionEvent event) {
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 mLastX = (int) event.getRawX();
@@ -422,10 +428,15 @@ public class DragLayout extends FrameLayout implements View.OnTouchListener {
                 mDownY = (int) event.getY();
                 break;
             case MotionEvent.ACTION_UP:
-                mMoveTime = System.currentTimeMillis() - mMoveTime;
-                if (mMoveTime < ViewConfiguration.getTapTimeout() && mMoveX < 10 && mMoveY < 10) {
+                long time = System.currentTimeMillis();
+                XLog.d(TAG + "抬起 time=" + time);
+                mMoveTime = time - mMoveTime;
+                XLog.d(TAG + "抬起 mMoveTime=" + mMoveTime + " TAP_TIME_OUT=" + TAP_TIME_OUT + " mMoveX=" + mMoveX + " mMoveY=" + mMoveY);
+                if (mMoveTime <TAP_TIME_OUT && mMoveX < MOVE_DISTANCE && mMoveY < MOVE_DISTANCE) {
                     // 点击事件
-                    mDragListener.onDragViewClick(1, mIsRightOpen);
+                    if (FastClickUtil.isNotFastClick()) {
+                        mDragListener.onDragViewClick(view, 1, mIsRightOpen);
+                    }
                 }
                 break;
         }
@@ -436,7 +447,7 @@ public class DragLayout extends FrameLayout implements View.OnTouchListener {
      *
      * @param event
      */
-    private void handleTopDragViewTouchEvent(MotionEvent event) {
+    private void handleTopDragViewTouchEvent(View view, MotionEvent event) {
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 mLastY = (int) event.getRawY();
@@ -461,10 +472,15 @@ public class DragLayout extends FrameLayout implements View.OnTouchListener {
                 mDownY = (int) event.getY();
                 break;
             case MotionEvent.ACTION_UP:
-                mMoveTime = System.currentTimeMillis() - mMoveTime;
-                if (mMoveTime < ViewConfiguration.getTapTimeout() && mMoveX < 10 && mMoveY < 10) {
+                long time = System.currentTimeMillis();
+                XLog.d(TAG + "抬起 time=" + time);
+                mMoveTime = time - mMoveTime;
+                XLog.d(TAG + "抬起 mMoveTime=" + mMoveTime + " TAP_TIME_OUT=" + TAP_TIME_OUT + " mMoveX=" + mMoveX + " mMoveY=" + mMoveY);
+                if (mMoveTime < TAP_TIME_OUT && mMoveX < MOVE_DISTANCE && mMoveY < MOVE_DISTANCE) {
                     // 点击事件
-                    mDragListener.onDragViewClick(2, mIsTopOpen);
+                    if (FastClickUtil.isNotFastClick()) {
+                        mDragListener.onDragViewClick(view, 2, mIsTopOpen);
+                    }
                 }
                 break;
         }
@@ -475,7 +491,7 @@ public class DragLayout extends FrameLayout implements View.OnTouchListener {
      *
      * @param event
      */
-    private void handleBottomDragViewTouchEvent(MotionEvent event) {
+    private void handleBottomDragViewTouchEvent(View view, MotionEvent event) {
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 mLastY = (int) event.getRawY();
@@ -500,29 +516,18 @@ public class DragLayout extends FrameLayout implements View.OnTouchListener {
                 mDownY = (int) event.getY();
                 break;
             case MotionEvent.ACTION_UP:
-                mMoveTime = System.currentTimeMillis() - mMoveTime;
-                if (mMoveTime < ViewConfiguration.getTapTimeout() && mMoveX < 10 && mMoveY < 10) {
+                long time = System.currentTimeMillis();
+                XLog.d(TAG + "抬起 time=" + time);
+                mMoveTime = time - mMoveTime;
+                XLog.d(TAG + "抬起 mMoveTime=" + mMoveTime + " TAP_TIME_OUT=" + TAP_TIME_OUT + " mMoveX=" + mMoveX + " mMoveY=" + mMoveY);
+                if (mMoveTime <TAP_TIME_OUT && mMoveX < MOVE_DISTANCE && mMoveY < MOVE_DISTANCE) {
                     // 点击事件
-                    mDragListener.onDragViewClick(3, mIsBottomOpen);
+                    if (FastClickUtil.isNotFastClick()) {
+                        mDragListener.onDragViewClick(view, 3, mIsBottomOpen);
+                    }
                 }
                 break;
         }
-    }
-
-    /**
-     * 拖动左边面板到左边缘
-     */
-    public void moveLeftViewToLeftEdge() {
-        mLeftWidth = 0;
-        moveLeftView(mLeftWidth);
-    }
-
-    /**
-     * 拖动左边面板到右边缘
-     */
-    public void moveLeftViewToRightEdge() {
-        mLeftWidth = getWidth();
-        moveLeftView(getWidth());
     }
 
     /**
@@ -534,22 +539,6 @@ public class DragLayout extends FrameLayout implements View.OnTouchListener {
     }
 
     /**
-     * 拖动右边面板到左边缘
-     */
-    public void moveRightViewToLeftEdge() {
-        mRightWidth = getWidth();
-        moveRightView(getWidth());
-    }
-
-    /**
-     * 拖动右边面板到右边缘
-     */
-    public void moveRightViewToRightEdge() {
-        mRightWidth = 0;
-        moveRightView(mRightWidth);
-    }
-
-    /**
      * 拖动右边面板到响应比例位置处
      */
     public void moveRightViewWithRatio(float ratio) {
@@ -558,43 +547,11 @@ public class DragLayout extends FrameLayout implements View.OnTouchListener {
     }
 
     /**
-     * 拖动顶部面板到顶部
-     */
-    public void moveTopViewToTopEdge() {
-        mTopHeight = 0;
-        moveTopView(mTopHeight);
-    }
-
-    /**
-     * 拖动顶部面板到底部
-     */
-    public void moveTopViewToBottomEdge() {
-        mTopHeight = getHeight();
-        moveTopView(mTopHeight);
-    }
-
-    /**
      * 拖动顶部面板到响应比例位置处
      */
     public void moveTopViewWithRatio(float ratio) {
         mTopHeight = (int) (getHeight() * ratio);
         moveTopView(mTopHeight);
-    }
-
-    /**
-     * 拖动底部面板到顶部
-     */
-    public void moveBottomViewToTopEdge() {
-        mBottomHeight = getHeight();
-        moveBottomView(mBottomHeight);
-    }
-
-    /**
-     * 拖动顶部面板到底部
-     */
-    public void moveBottomViewToBottomEdge() {
-        mBottomHeight = 0;
-        moveBottomView(mBottomHeight);
     }
 
     /**
@@ -626,8 +583,9 @@ public class DragLayout extends FrameLayout implements View.OnTouchListener {
         /**
          * @param position 对应拖拽按钮方向 0为left 1为right 2为top 3 为bottom
          * @param isOpen   面板是否打开
+         * @param view     几点的view
          */
-        void onDragViewClick(int position, boolean isOpen);
+        void onDragViewClick(View view, int position, boolean isOpen);
     }
 
     /**
