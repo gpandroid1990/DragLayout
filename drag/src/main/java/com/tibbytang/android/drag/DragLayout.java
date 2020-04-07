@@ -1,11 +1,11 @@
 package com.tibbytang.android.drag;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.FrameLayout;
-import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -20,14 +20,8 @@ import com.elvishew.xlog.XLog;
  */
 public class DragLayout extends FrameLayout implements View.OnTouchListener {
     private static final String TAG = DragLayout.class.getSimpleName();
-    private FrameLayout mLeftDragContentLayout;
-    private FrameLayout mRightDragContentLayout;
-    private FrameLayout mTopDragContentLayout;
-    private FrameLayout mBottomDragContentLayout;
-    private LinearLayout mLeftDragView;
-    private LinearLayout mRightDragView;
-    private LinearLayout mTopDragView;
-    private LinearLayout mBottomDragView;
+    private View mContentViewGrop;
+    private View mDragView;
     private int mLeftWidth = 0;
     private int mRightWidth = 0;
     private int mTopHeight = 0;
@@ -51,6 +45,8 @@ public class DragLayout extends FrameLayout implements View.OnTouchListener {
     private int mRightDragViewWidth = 0;
     private int mTopDragViewHeight = 0;
     private int mBottomDragViewHeight = 0;
+    // 拖拽方向 0 为left,1 为right 2 为top 3 为bottom
+    private int mDragDirection = 0;
     // 最小移动距离 判断是否打开
     private static final int MIN_OPEN_DISTANCE = 2;
     // 判断单击还是move
@@ -63,76 +59,46 @@ public class DragLayout extends FrameLayout implements View.OnTouchListener {
 
     public DragLayout(@NonNull Context context) {
         super(context);
+        init(context, null);
     }
 
     public DragLayout(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
+        init(context, attrs);
     }
 
     public DragLayout(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        init(context, attrs);
     }
 
     public void addDragStateListener(DragStateListener dragListener) {
         mDragListener = dragListener;
     }
 
+    private void init(Context context, AttributeSet attrs) {
+        if (null != attrs) {
+            TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.DragLayout);
+            mDragDirection = array.getInt(R.styleable.DragLayout_drag_direction, 0);
+        }
+    }
+
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
-        mLeftDragContentLayout = findViewById(R.id.drag_left_content_view);
-        mRightDragContentLayout = findViewById(R.id.drag_right_content_view);
-        mTopDragContentLayout = findViewById(R.id.drag_top_content_view);
-        mBottomDragContentLayout = findViewById(R.id.drag_bottom_content_view);
-
-        mLeftDragView = findViewById(R.id.drag_left_view);
-        mRightDragView = findViewById(R.id.drag_right_view);
-        mTopDragView = findViewById(R.id.drag_top_view);
-        mBottomDragView = findViewById(R.id.drag_bottom_view);
-        initLeftDragview();
-        initRightDragview();
-        initTopDragView();
-        initBottomDragView();
+        mContentViewGrop = getChildAt(0);
+        mDragView = getChildAt(1);
+        initDragView();
     }
 
-    /**
-     * 初始化左边拖拽事件
-     */
-    private void initLeftDragview() {
-        if (null != mLeftDragView) {
-            mLeftDragView.setOnTouchListener(this);
+    private void initDragView() {
+        if (null != mDragView) {
+            mDragView.setOnTouchListener(this);
         }
     }
-
-    /**
-     * 初始化右边拖拽事件
-     */
-    private void initRightDragview() {
-        if (null != mRightDragView) {
-            mRightDragView.setOnTouchListener(this);
-        }
-    }
-
-    /**
-     * 初始化顶部拖拽view
-     */
-    private void initTopDragView() {
-        if (null != mTopDragView) {
-            mTopDragView.setOnTouchListener(this);
-        }
-    }
-
-    /**
-     * 初始化底部拖拽view
-     */
-    private void initBottomDragView() {
-        if (null != mBottomDragView) {
-            mBottomDragView.setOnTouchListener(this);
-        }
-    }
-
     /**
      * 设置是否允许拖拽 默认为true
+     *
      * @param enableDrag
      */
     public void setEnableDrag(boolean enableDrag) {
@@ -141,8 +107,8 @@ public class DragLayout extends FrameLayout implements View.OnTouchListener {
 
     private void moveLeftView(int width) {
         XLog.d(TAG + " moveLeftView width=" + width);
-        if (null != mLeftDragView && mLeftDragContentLayout != null) {
-            LayoutParams layoutParams = (LayoutParams) mLeftDragContentLayout.getLayoutParams();
+        if (null != mDragView && mContentViewGrop != null) {
+            LayoutParams layoutParams = (LayoutParams) mContentViewGrop.getLayoutParams();
             if (width <= 0) {
                 layoutParams.width = 0;
             } else if (mLeftWidth >= getWidth() - mLeftDragViewWidth) {
@@ -150,7 +116,7 @@ public class DragLayout extends FrameLayout implements View.OnTouchListener {
             } else {
                 layoutParams.width = mLeftWidth;
             }
-            mLeftDragContentLayout.setLayoutParams(layoutParams);
+            mContentViewGrop.setLayoutParams(layoutParams);
             // 判断是否拖拽到边缘
             if (mLeftWidth >= (getWidth() - mLeftDragViewWidth)) {
                 if (null != mDragListener && !mIsScrollToRight) {
@@ -172,11 +138,10 @@ public class DragLayout extends FrameLayout implements View.OnTouchListener {
             }
         }
     }
-
     private void moveRightView(int width) {
         XLog.d(TAG + " moveRightView width=" + width);
-        if (null != mRightDragView && mRightDragContentLayout != null) {
-            LayoutParams layoutParams = (LayoutParams) mRightDragContentLayout.getLayoutParams();
+        if (null != mDragView && mContentViewGrop != null) {
+            LayoutParams layoutParams = (LayoutParams) mContentViewGrop.getLayoutParams();
             if (width <= 0) {
                 layoutParams.width = 0;
             } else if (width >= getWidth() - mRightDragViewWidth) {
@@ -188,7 +153,7 @@ public class DragLayout extends FrameLayout implements View.OnTouchListener {
             } else {
                 layoutParams.width = width;
             }
-            mRightDragContentLayout.setLayoutParams(layoutParams);
+            mContentViewGrop.setLayoutParams(layoutParams);
 
             // 判断是否拖拽到边缘
             if (mRightWidth >= (getWidth() - mRightDragViewWidth)) {
@@ -215,8 +180,8 @@ public class DragLayout extends FrameLayout implements View.OnTouchListener {
 
     private void moveTopView(int height) {
         XLog.d(TAG + " moveTopView height=" + height);
-        if (null != mTopDragView && mTopDragContentLayout != null) {
-            LayoutParams layoutParams = (LayoutParams) mTopDragContentLayout.getLayoutParams();
+        if (null != mDragView && mContentViewGrop != null) {
+            LayoutParams layoutParams = (LayoutParams) mContentViewGrop.getLayoutParams();
             if (height <= 0) {
                 layoutParams.height = 0;
             } else if (height > getHeight() - mTopDragViewHeight) {
@@ -228,7 +193,7 @@ public class DragLayout extends FrameLayout implements View.OnTouchListener {
             } else {
                 layoutParams.height = height;
             }
-            mTopDragContentLayout.setLayoutParams(layoutParams);
+            mContentViewGrop.setLayoutParams(layoutParams);
             // 判断是否拖拽到边缘
             if (mTopHeight >= (getHeight() - mTopDragViewHeight)) {
                 if (null != mDragListener && !mIsScrollToTop) {
@@ -253,8 +218,8 @@ public class DragLayout extends FrameLayout implements View.OnTouchListener {
 
     private void moveBottomView(int height) {
         XLog.d(TAG + " moveBottomView height=" + height + " getHeight()=" + getHeight());
-        if (null != mBottomDragView && mBottomDragContentLayout != null) {
-            LayoutParams layoutParams = (LayoutParams) mBottomDragContentLayout.getLayoutParams();
+        if (null != mDragView && mContentViewGrop != null) {
+            LayoutParams layoutParams = (LayoutParams) mContentViewGrop.getLayoutParams();
             if (height <= 0) {
                 layoutParams.height = 0;
             } else if (height > getHeight() - mBottomDragViewHeight) {
@@ -266,7 +231,7 @@ public class DragLayout extends FrameLayout implements View.OnTouchListener {
             } else {
                 layoutParams.height = height;
             }
-            mBottomDragContentLayout.setLayoutParams(layoutParams);
+            mContentViewGrop.setLayoutParams(layoutParams);
             // 判断是否拖拽到边缘
             if (mBottomHeight >= (getHeight() - mBottomDragViewHeight)) {
                 if (null != mDragListener && !mIsScrollToBottom) {
@@ -305,44 +270,48 @@ public class DragLayout extends FrameLayout implements View.OnTouchListener {
         XLog.d(TAG + " onLayout");
         int childCount = getChildCount();
         XLog.d(TAG + " childCount=" + childCount);
-        for (int i = 0; i < childCount; i++) {
-            View childView = getChildAt(i);
-            int measureWidth = childView.getMeasuredWidth();
-            int measureHeight = childView.getMeasuredHeight();
-            if (i == 4) {
-                if (mLeftWidth <= 0) {
-                    childView.layout(0, 0, measureWidth, measureHeight);
-                } else if (mLeftWidth >= getWidth() - measureWidth) {
-                    childView.layout(getWidth() - measureWidth, 0, getWidth(), measureHeight);
-                } else {
-                    childView.layout(mLeftWidth, 0, measureWidth + mLeftWidth, measureHeight);
-                }
-            }
-            if (i == 5) {
-                if (mRightWidth <= 0) {
-                    childView.layout(getWidth() - measureWidth, 0, getWidth(), measureHeight);
-                } else if (mRightWidth >= getWidth() - mRightDragViewWidth) {
-                    childView.layout(0, 0, measureWidth, measureHeight);
-                } else {
-                    childView.layout(getWidth() - mRightWidth - measureWidth, 0, getWidth() - mRightWidth, measureHeight);
-                }
-            }
-            if (i == 6) {
-                if (mTopHeight <= 0) {
-                    childView.layout(0, 0, getWidth(), measureHeight);
-                } else if (mTopHeight >= getHeight() - mTopDragViewHeight) {
-                    childView.layout(0, getHeight() - measureHeight, getWidth(), getHeight());
-                } else {
-                    childView.layout(0, mTopHeight, getWidth(), mTopHeight + measureHeight);
-                }
-            }
-            if (i == 7) {
-                if (mBottomHeight <= 0) {
-                    childView.layout(0, getHeight() - measureHeight, getWidth(), getHeight());
-                } else if (mBottomHeight >= getHeight() - mBottomDragViewHeight) {
-                    childView.layout(0, 0, getWidth(), measureHeight);
-                } else {
-                    childView.layout(0, getHeight() - measureHeight - mBottomHeight, getWidth(), getHeight() - mBottomHeight);
+        if (childCount == 2) {
+            for (int i = 0; i < childCount; i++) {
+                View childView = getChildAt(i);
+                int measureWidth = childView.getMeasuredWidth();
+                int measureHeight = childView.getMeasuredHeight();
+                if (i == 1) {
+                    if (mDragDirection == 0) {
+                        if (mLeftWidth <= 0) {
+                            childView.layout(0, 0, measureWidth, measureHeight);
+                        } else if (mLeftWidth >= getWidth() - measureWidth) {
+                            childView.layout(getWidth() - measureWidth, 0, getWidth(), measureHeight);
+                        } else {
+                            childView.layout(mLeftWidth, 0, measureWidth + mLeftWidth, measureHeight);
+                        }
+                    }
+                    if (mDragDirection == 1) {
+                        if (mRightWidth <= 0) {
+                            childView.layout(getWidth() - measureWidth, 0, getWidth(), measureHeight);
+                        } else if (mRightWidth >= getWidth() - mRightDragViewWidth) {
+                            childView.layout(0, 0, measureWidth, measureHeight);
+                        } else {
+                            childView.layout(getWidth() - mRightWidth - measureWidth, 0, getWidth() - mRightWidth, measureHeight);
+                        }
+                    }
+                    if (mDragDirection == 2) {
+                        if (mTopHeight <= 0) {
+                            childView.layout(0, 0, getWidth(), measureHeight);
+                        } else if (mTopHeight >= getHeight() - mTopDragViewHeight) {
+                            childView.layout(0, getHeight() - measureHeight, getWidth(), getHeight());
+                        } else {
+                            childView.layout(0, mTopHeight, getWidth(), mTopHeight + measureHeight);
+                        }
+                    }
+                    if (mDragDirection == 3) {
+                        if (mBottomHeight <= 0) {
+                            childView.layout(0, getHeight() - measureHeight, getWidth(), getHeight());
+                        } else if (mBottomHeight >= getHeight() - mBottomDragViewHeight) {
+                            childView.layout(0, 0, getWidth(), measureHeight);
+                        } else {
+                            childView.layout(0, getHeight() - measureHeight - mBottomHeight, getWidth(), getHeight() - mBottomHeight);
+                        }
+                    }
                 }
             }
         }
@@ -350,16 +319,16 @@ public class DragLayout extends FrameLayout implements View.OnTouchListener {
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
-        if (v == mLeftDragView) {
+        if (mDragDirection == 0 && getChildCount() == 2) {
             handleLeftDragViewTouchEvent(v, event);
         }
-        if (v == mRightDragView) {
+        if (mDragDirection == 1 && getChildCount() == 2) {
             handleRightDragViewTouchEvent(v, event);
         }
-        if (v == mTopDragView) {
+        if (mDragDirection == 2 && getChildCount() == 2) {
             handleTopDragViewTouchEvent(v, event);
         }
-        if (v == mBottomDragView) {
+        if (mDragDirection == 3 && getChildCount() == 2) {
             handleBottomDragViewTouchEvent(v, event);
         }
         return true;
@@ -388,7 +357,7 @@ public class DragLayout extends FrameLayout implements View.OnTouchListener {
                 int distance = rawX - mLastX;
                 XLog.d(TAG + "getTop()=" + getTop() + " getBottom()=" + getBottom() + " distance=" + distance);
                 mLeftWidth += distance;
-                if (mEnableDrag){
+                if (mEnableDrag) {
                     moveLeftView(mLeftWidth);
                 }
                 mLastX = rawX;

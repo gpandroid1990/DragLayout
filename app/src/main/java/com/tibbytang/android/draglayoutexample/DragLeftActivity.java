@@ -56,7 +56,7 @@ public class DragLeftActivity extends AppCompatActivity implements View.OnClickL
         mThirdView.setOnClickListener(this);
         mShowView.setOnClickListener(this);
         mHideView.setOnClickListener(this);
-        mDragLayout.setEnableDrag(false);
+        mDragLayout.setEnableDrag(true);
         mDragLayout.addDragStateListener(new DragLayout.DragStateListener() {
             @Override
             public void onDragStateChanged(DragLayout.DragState dragState) {

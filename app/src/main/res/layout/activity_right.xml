@@ -45,82 +45,30 @@
     <com.tibbytang.android.drag.DragLayout
         android:id="@+id/main_drag_layout_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        app:drag_direction="right">
 
-        <FrameLayout
-            android:id="@id/drag_left_content_view"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_gravity="left"
-            android:background="@color/colorAccent"/>
 
-        <FrameLayout
-            android:id="@id/drag_right_content_view"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_gravity="right">
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/right_drag_recycler_view"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-        </FrameLayout>
-
-        <FrameLayout
-            android:id="@id/drag_top_content_view"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_gravity="left" />
-
-        <FrameLayout
-            android:id="@id/drag_bottom_content_view"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_gravity="bottom" />
-
-        <LinearLayout
-            android:id="@id/drag_left_view"
-            android:layout_width="@dimen/drag_width"
-            android:layout_height="match_parent"
-            android:layout_gravity="left"
-            android:layout_marginTop="@dimen/drag_width"
-            android:layout_marginBottom="@dimen/drag_width"
-            android:background="#FF0000"
-            android:orientation="vertical"
-            android:visibility="gone" />
-
-        <LinearLayout
-            android:id="@id/drag_right_view"
-            android:layout_width="@dimen/drag_width"
-            android:layout_height="match_parent"
-            android:layout_gravity="right"
-            android:layout_marginTop="@dimen/drag_width"
-            android:layout_marginBottom="@dimen/drag_width"
-            android:background="#FF0000"
-            android:orientation="vertical"
-            android:visibility="visible" />
-
-        <LinearLayout
-            android:id="@id/drag_top_view"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/drag_width"
-            android:layout_gravity="top"
-            android:layout_marginLeft="@dimen/drag_width"
-            android:layout_marginRight="@dimen/drag_width"
-            android:background="#FF0000"
-            android:orientation="vertical"
-            android:visibility="gone" />
-
-        <LinearLayout
-            android:id="@id/drag_bottom_view"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/drag_width"
-            android:layout_gravity="bottom"
-            android:layout_marginLeft="@dimen/drag_width"
-            android:layout_marginRight="@dimen/drag_width"
-            android:background="#FF0000"
-            android:orientation="vertical"
-            android:visibility="gone" />
     </com.tibbytang.android.drag.DragLayout>
+    <FrameLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="right"
+        android:background="@color/colorAccent">
 
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/right_drag_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </FrameLayout>
+
+    <LinearLayout
+        android:layout_width="@dimen/drag_width"
+        android:layout_height="match_parent"
+        android:layout_gravity="right"
+        android:layout_marginTop="@dimen/drag_width"
+        android:layout_marginBottom="@dimen/drag_width"
+        android:background="#FF0000"
+        android:orientation="vertical"
+        android:visibility="visible" />
 </LinearLayout>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="DragLayout">
+        <!-- 拖拽view id -->
+        <attr name="drag_bar_id" format="reference" />
+        <attr name="drag_direction">
+            <flag name="left" value="0" />
+            <flag name="right" value="1" />
+            <flag name="top" value="2" />
+            <flag name="bottom" value="3" />
+        </attr>
+    </declare-styleable>
+</resources>
