@@ -57,6 +57,8 @@ public class DragLayout extends FrameLayout implements View.OnTouchListener {
     private static final long TAP_TIME_OUT = 500L;
     // 移动距离
     private static final int MOVE_DISTANCE = 10;
+    // 是否允许拖拽 默认可以拖拽
+    private boolean mEnableDrag = true;
     private DragStateListener mDragListener;
 
     public DragLayout(@NonNull Context context) {
@@ -127,6 +129,14 @@ public class DragLayout extends FrameLayout implements View.OnTouchListener {
         if (null != mBottomDragView) {
             mBottomDragView.setOnTouchListener(this);
         }
+    }
+
+    /**
+     * 设置是否允许拖拽 默认为true
+     * @param enableDrag
+     */
+    public void setEnableDrag(boolean enableDrag) {
+        this.mEnableDrag = enableDrag;
     }
 
     private void moveLeftView(int width) {
@@ -378,7 +388,9 @@ public class DragLayout extends FrameLayout implements View.OnTouchListener {
                 int distance = rawX - mLastX;
                 XLog.d(TAG + "getTop()=" + getTop() + " getBottom()=" + getBottom() + " distance=" + distance);
                 mLeftWidth += distance;
-                moveLeftView(mLeftWidth);
+                if (mEnableDrag){
+                    moveLeftView(mLeftWidth);
+                }
                 mLastX = rawX;
                 mMoveX += Math.abs(event.getX() - mDownX);
                 mMoveY += Math.abs(event.getY() - mDownY);
