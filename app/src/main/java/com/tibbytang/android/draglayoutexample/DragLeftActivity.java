@@ -2,6 +2,7 @@ package com.tibbytang.android.draglayoutexample;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -22,6 +23,9 @@ public class DragLeftActivity extends AppCompatActivity implements View.OnClickL
     private AppCompatButton mCenterView;
     private AppCompatButton mRightView;
     private AppCompatButton mThirdView;
+    private AppCompatButton mHideView;
+    private AppCompatButton mShowView;
+    private FrameLayout mDragContainerView;
 
     private RecyclerView mRecyclerView;
     private MultiTypeAdapter mMultiTypeAdapter;
@@ -43,10 +47,15 @@ public class DragLeftActivity extends AppCompatActivity implements View.OnClickL
         mRightView = this.findViewById(R.id.move_right_view);
         mThirdView = this.findViewById(R.id.move_third_view);
         mRecyclerView = this.findViewById(R.id.left_drag_recycler_view);
+        mHideView = this.findViewById(R.id.hide_layout_view);
+        mShowView = this.findViewById(R.id.show_layout_view);
+        mDragContainerView = this.findViewById(R.id.drag_container_view);
         mLeftView.setOnClickListener(this);
         mCenterView.setOnClickListener(this);
         mRightView.setOnClickListener(this);
         mThirdView.setOnClickListener(this);
+        mShowView.setOnClickListener(this);
+        mHideView.setOnClickListener(this);
         mDragLayout.addDragStateListener(new DragLayout.DragStateListener() {
             @Override
             public void onDragStateChanged(DragLayout.DragState dragState) {
@@ -145,6 +154,14 @@ public class DragLeftActivity extends AppCompatActivity implements View.OnClickL
         }
         if (v == mThirdView) {
             mDragLayout.moveLeftViewWithRatio(1.0f / 3.0f);
+        }
+        if (v == mShowView) {
+//            mDragLayout.setVisibility(View.VISIBLE);
+            mDragContainerView.setVisibility(View.VISIBLE);
+        }
+        if (v == mHideView) {
+//            mDragLayout.setVisibility(View.GONE);
+            mDragContainerView.setVisibility(View.GONE);
         }
     }
 

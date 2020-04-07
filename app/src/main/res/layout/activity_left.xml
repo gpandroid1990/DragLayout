@@ -42,85 +42,107 @@
             android:text="移动到1/3处" />
     </LinearLayout>
 
-    <com.tibbytang.android.drag.DragLayout
-        android:id="@+id/main_drag_layout_view"
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/show_layout_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="显示" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/hide_layout_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="隐藏" />
+    </LinearLayout>
+    <FrameLayout
+        android:id="@+id/drag_container_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+        <com.tibbytang.android.drag.DragLayout
+            android:id="@+id/main_drag_layout_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-        <FrameLayout
-            android:id="@id/drag_left_content_view"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:background="@color/colorAccent"
-            android:layout_gravity="left">
+            <FrameLayout
+                android:id="@id/drag_left_content_view"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="left"
+                android:background="@color/colorAccent">
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/left_drag_recycler_view"
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/left_drag_recycler_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+            </FrameLayout>
+
+            <FrameLayout
+                android:id="@id/drag_right_content_view"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="right" />
+
+            <FrameLayout
+                android:id="@id/drag_top_content_view"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-        </FrameLayout>
+                android:layout_height="0dp"
+                android:layout_gravity="left" />
 
-        <FrameLayout
-            android:id="@id/drag_right_content_view"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_gravity="right"/>
+            <FrameLayout
+                android:id="@id/drag_bottom_content_view"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_gravity="bottom" />
 
-        <FrameLayout
-            android:id="@id/drag_top_content_view"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_gravity="left"/>
+            <LinearLayout
+                android:id="@id/drag_left_view"
+                android:layout_width="@dimen/drag_width"
+                android:layout_height="match_parent"
+                android:layout_gravity="left"
+                android:layout_marginTop="@dimen/drag_width"
+                android:layout_marginBottom="@dimen/drag_width"
+                android:background="#FF0000"
+                android:orientation="vertical"
+                android:visibility="visible" />
 
-        <FrameLayout
-            android:id="@id/drag_bottom_content_view"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_gravity="bottom"/>
+            <LinearLayout
+                android:id="@id/drag_right_view"
+                android:layout_width="@dimen/drag_width"
+                android:layout_height="match_parent"
+                android:layout_gravity="right"
+                android:layout_marginTop="@dimen/drag_width"
+                android:layout_marginBottom="@dimen/drag_width"
+                android:background="#FF0000"
+                android:orientation="vertical"
+                android:visibility="gone" />
 
-        <LinearLayout
-            android:id="@id/drag_left_view"
-            android:layout_width="@dimen/drag_width"
-            android:layout_height="match_parent"
-            android:layout_gravity="left"
-            android:layout_marginTop="@dimen/drag_width"
-            android:layout_marginBottom="@dimen/drag_width"
-            android:background="#FF0000"
-            android:orientation="vertical"
-            android:visibility="visible" />
+            <LinearLayout
+                android:id="@id/drag_top_view"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/drag_width"
+                android:layout_gravity="top"
+                android:layout_marginLeft="@dimen/drag_width"
+                android:layout_marginRight="@dimen/drag_width"
+                android:background="#FF0000"
+                android:orientation="vertical"
+                android:visibility="gone" />
 
-        <LinearLayout
-            android:id="@id/drag_right_view"
-            android:layout_width="@dimen/drag_width"
-            android:layout_height="match_parent"
-            android:layout_gravity="right"
-            android:layout_marginTop="@dimen/drag_width"
-            android:layout_marginBottom="@dimen/drag_width"
-            android:background="#FF0000"
-            android:orientation="vertical"
-            android:visibility="gone" />
-
-        <LinearLayout
-            android:id="@id/drag_top_view"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/drag_width"
-            android:layout_gravity="top"
-            android:layout_marginLeft="@dimen/drag_width"
-            android:layout_marginRight="@dimen/drag_width"
-            android:background="#FF0000"
-            android:orientation="vertical"
-            android:visibility="gone" />
-
-        <LinearLayout
-            android:id="@id/drag_bottom_view"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/drag_width"
-            android:layout_gravity="bottom"
-            android:layout_marginLeft="@dimen/drag_width"
-            android:layout_marginRight="@dimen/drag_width"
-            android:background="#FF0000"
-            android:orientation="vertical"
-            android:visibility="gone" />
-    </com.tibbytang.android.drag.DragLayout>
+            <LinearLayout
+                android:id="@id/drag_bottom_view"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/drag_width"
+                android:layout_gravity="bottom"
+                android:layout_marginLeft="@dimen/drag_width"
+                android:layout_marginRight="@dimen/drag_width"
+                android:background="#FF0000"
+                android:orientation="vertical"
+                android:visibility="gone" />
+        </com.tibbytang.android.drag.DragLayout>
+    </FrameLayout>
 
 </LinearLayout>
