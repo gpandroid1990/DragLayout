@@ -104,7 +104,11 @@ public class DragLayout extends FrameLayout implements View.OnTouchListener {
         if (getChildCount() == 2) {
             mContentViewGrop = getChildAt(0);
             LayoutParams layoutParams = (LayoutParams) mContentViewGrop.getLayoutParams();
-            layoutParams.width = 0;
+            if (mDragDirection == 0 || mDragDirection == 1) {
+                layoutParams.width = 0;
+            } else {
+                layoutParams.height = 0;
+            }
             mContentViewGrop.setLayoutParams(layoutParams);
             mDragView = getChildAt(1);
             initDragView();
@@ -297,38 +301,38 @@ public class DragLayout extends FrameLayout implements View.OnTouchListener {
                     XLog.d("measureWidth=" + measureWidth + " measureHeight=" + measureHeight);
                     if (mDragDirection == 0) {
                         if (mLeftWidth <= 0) {
-                            childView.layout(0, 0, measureWidth, measureHeight);
+                            childView.layout(0, (getHeight() - measureHeight) / 2, measureWidth, getHeight() / 2 + measureHeight / 2);
                         } else if (mLeftWidth >= getWidth() - measureWidth) {
-                            childView.layout(getWidth() - measureWidth, 0, getWidth(), measureHeight);
+                            childView.layout(getWidth() - measureWidth, (getHeight() - measureHeight) / 2, getWidth(), getHeight() / 2 + measureHeight / 2);
                         } else {
-                            childView.layout(mLeftWidth, 0, measureWidth + mLeftWidth, measureHeight);
+                            childView.layout(mLeftWidth, (getHeight() - measureHeight) / 2, measureWidth + mLeftWidth, getHeight() / 2 + measureHeight / 2);
                         }
                     }
                     if (mDragDirection == 1) {
                         if (mRightWidth <= 0) {
-                            childView.layout(getWidth() - measureWidth, 0, getWidth(), measureHeight);
+                            childView.layout(getWidth() - measureWidth, (getHeight() - measureHeight) / 2, getWidth(), getHeight() / 2 + measureHeight / 2);
                         } else if (mRightWidth >= getWidth() - mRightDragViewWidth) {
-                            childView.layout(0, 0, measureWidth, measureHeight);
+                            childView.layout(0, (getHeight() - measureHeight) / 2, measureWidth, getHeight() / 2 + measureHeight / 2);
                         } else {
-                            childView.layout(getWidth() - mRightWidth - measureWidth, 0, getWidth() - mRightWidth, measureHeight);
+                            childView.layout(getWidth() - mRightWidth - measureWidth, (getHeight() - measureHeight) / 2, getWidth() - mRightWidth, getHeight() / 2 + measureHeight / 2);
                         }
                     }
                     if (mDragDirection == 2) {
                         if (mTopHeight <= 0) {
-                            childView.layout(0, 0, getWidth(), measureHeight);
+                            childView.layout((getWidth() - measureWidth) / 2, 0, getWidth() / 2 + measureWidth / 2, measureHeight);
                         } else if (mTopHeight >= getHeight() - mTopDragViewHeight) {
-                            childView.layout(0, getHeight() - measureHeight, getWidth(), getHeight());
+                            childView.layout((getWidth() - measureWidth) / 2, getHeight() - measureHeight, getWidth() / 2 + measureWidth / 2, getHeight());
                         } else {
-                            childView.layout(0, mTopHeight, getWidth(), mTopHeight + measureHeight);
+                            childView.layout((getWidth() - measureWidth) / 2, mTopHeight, getWidth() / 2 + measureWidth / 2, mTopHeight + measureHeight);
                         }
                     }
                     if (mDragDirection == 3) {
                         if (mBottomHeight <= 0) {
-                            childView.layout(0, getHeight() - measureHeight, getWidth(), getHeight());
+                            childView.layout((getWidth() - measureWidth) / 2, getHeight() - measureHeight, getWidth() / 2 + measureWidth / 2, getHeight());
                         } else if (mBottomHeight >= getHeight() - mBottomDragViewHeight) {
-                            childView.layout(0, 0, getWidth(), measureHeight);
+                            childView.layout((getWidth() - measureWidth) / 2, 0, getWidth() / 2 + measureWidth / 2, measureHeight);
                         } else {
-                            childView.layout(0, getHeight() - measureHeight - mBottomHeight, getWidth(), getHeight() - mBottomHeight);
+                            childView.layout((getWidth() - measureWidth) / 2, getHeight() - measureHeight - mBottomHeight, getWidth() / 2 + measureWidth / 2, getHeight() - mBottomHeight);
                         }
                     }
                 }
