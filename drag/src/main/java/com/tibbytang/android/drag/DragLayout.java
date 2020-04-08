@@ -86,6 +86,7 @@ public class DragLayout extends FrameLayout implements View.OnTouchListener {
             mDragDirection = array.getInt(R.styleable.DragLayout_drag_direction, 0);
         }
     }
+
     private boolean isNotFastClick() {
         if (Math.abs((System.currentTimeMillis() - currentTime)) > TIME) {
             count = 0;
@@ -566,6 +567,42 @@ public class DragLayout extends FrameLayout implements View.OnTouchListener {
     public void moveBottomViewWithRatio(float ratio) {
         mBottomHeight = (int) (getHeight() * ratio);
         moveBottomView(mBottomHeight);
+    }
+
+    /**
+     * 判断左边面板是否打开
+     *
+     * @return
+     */
+    public boolean isLeftPanelOpen() {
+        return mIsLeftOpen;
+    }
+
+    /**
+     * 判断右边面板是否打开
+     *
+     * @return
+     */
+    public boolean isRightPanelOpen() {
+        return mIsRightOpen;
+    }
+
+    /**
+     * 判断顶部面板是否打开
+     *
+     * @return
+     */
+    public boolean isTopPanelOpen() {
+        return mIsTopOpen;
+    }
+
+    /**
+     * 判断底部面板是否打开
+     *
+     * @return
+     */
+    public boolean isBottomPanelOpen() {
+        return mIsBottomOpen;
     }
 
     /**

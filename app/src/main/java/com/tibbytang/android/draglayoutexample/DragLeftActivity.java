@@ -10,6 +10,7 @@ import androidx.appcompat.widget.AppCompatButton;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.elvishew.xlog.XLog;
 import com.tibbytang.android.drag.DragLayout;
 
 import java.util.ArrayList;
@@ -25,6 +26,7 @@ public class DragLeftActivity extends AppCompatActivity implements View.OnClickL
     private AppCompatButton mThirdView;
     private AppCompatButton mHideView;
     private AppCompatButton mShowView;
+    private AppCompatButton mGetStateView;
     private FrameLayout mDragContainerView;
 
     private RecyclerView mRecyclerView;
@@ -49,12 +51,14 @@ public class DragLeftActivity extends AppCompatActivity implements View.OnClickL
         mRecyclerView = this.findViewById(R.id.left_drag_recycler_view);
         mHideView = this.findViewById(R.id.hide_layout_view);
         mShowView = this.findViewById(R.id.show_layout_view);
+        mGetStateView = this.findViewById(R.id.get_layout_state_view);
         mDragContainerView = this.findViewById(R.id.drag_container_view);
         mLeftView.setOnClickListener(this);
         mCenterView.setOnClickListener(this);
         mRightView.setOnClickListener(this);
         mThirdView.setOnClickListener(this);
         mShowView.setOnClickListener(this);
+        this.mGetStateView.setOnClickListener(this);
         mHideView.setOnClickListener(this);
         mDragLayout.setEnableDrag(true);
         mDragLayout.addDragStateListener(new DragLayout.DragStateListener() {
@@ -163,6 +167,10 @@ public class DragLeftActivity extends AppCompatActivity implements View.OnClickL
         if (v == mHideView) {
 //            mDragLayout.setVisibility(View.GONE);
             mDragContainerView.setVisibility(View.GONE);
+        }
+
+        if (v==mGetStateView){
+            XLog.d("dragLayout open state :"+mDragLayout.isLeftPanelOpen());
         }
     }
 

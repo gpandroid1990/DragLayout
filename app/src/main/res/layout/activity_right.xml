@@ -48,7 +48,6 @@
         android:layout_height="match_parent"
         app:drag_direction="right">
 
-
     </com.tibbytang.android.drag.DragLayout>
     <FrameLayout
         android:layout_width="0dp"
