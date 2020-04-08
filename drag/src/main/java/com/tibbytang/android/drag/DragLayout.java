@@ -541,33 +541,42 @@ public class DragLayout extends FrameLayout implements View.OnTouchListener {
      * @param ratio
      */
     public void openPanelWithRatio(final float ratio) {
-        postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                switch (mDragDirection) {
-                    case 0:
-                        moveLeftViewWithRatio(ratio);
-                        break;
-                    case 1:
-                        moveRightViewWithRatio(ratio);
-                        break;
-                    case 2:
-                        moveTopViewWithRatio(ratio);
-                        break;
-                    case 3:
-                        moveBottomViewWithRatio(ratio);
-                        break;
-                    default:
-                        break;
+        int width = getWidth();
+        if (width == 0) {
+            postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    moveView(ratio);
                 }
-            }
-        }, 50);
+            }, 50);
+        } else {
+            moveView(ratio);
+        }
+    }
+
+    private void moveView(final float ratio) {
+        switch (mDragDirection) {
+            case 0:
+                moveLeftViewWithRatio(ratio);
+                break;
+            case 1:
+                moveRightViewWithRatio(ratio);
+                break;
+            case 2:
+                moveTopViewWithRatio(ratio);
+                break;
+            case 3:
+                moveBottomViewWithRatio(ratio);
+                break;
+            default:
+                break;
+        }
     }
 
     /**
      * 关闭面板
      */
-    public void closePanel(){
+    public void closePanel() {
         switch (mDragDirection) {
             case 0:
                 moveLeftViewWithRatio(0.0f);
