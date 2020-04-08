@@ -565,6 +565,28 @@ public class DragLayout extends FrameLayout implements View.OnTouchListener {
     }
 
     /**
+     * 关闭面板
+     */
+    public void closePanel(){
+        switch (mDragDirection) {
+            case 0:
+                moveLeftViewWithRatio(0.0f);
+                break;
+            case 1:
+                moveRightViewWithRatio(0.0f);
+                break;
+            case 2:
+                moveTopViewWithRatio(0.0f);
+                break;
+            case 3:
+                moveBottomViewWithRatio(0.0f);
+                break;
+            default:
+                break;
+        }
+    }
+
+    /**
      * 拖动左边面板到响应比例位置处
      */
     private void moveLeftViewWithRatio(float ratio) {

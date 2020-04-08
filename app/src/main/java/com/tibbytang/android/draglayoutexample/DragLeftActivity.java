@@ -117,7 +117,8 @@ public class DragLeftActivity extends AppCompatActivity implements View.OnClickL
     public void onClick(View v) {
 
         if (v == mLeftView) {
-            mDragLayout.openPanelWithRatio(0.0f);
+//            mDragLayout.openPanelWithRatio(0.0f);
+            mDragLayout.closePanel();
         }
         if (v == mRightView) {
             mDragLayout.openPanelWithRatio(1.0f);

@@ -2,6 +2,7 @@ package com.tibbytang.android.draglayoutexample;
 
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -111,7 +112,8 @@ public class DragRightActivity extends AppCompatActivity implements View.OnClick
             mDragLayout.openPanelWithRatio(1.0f);
         }
         if (v == mRightView) {
-            mDragLayout.openPanelWithRatio(0.0f);
+//            mDragLayout.openPanelWithRatio(0.0f);
+            mDragLayout.closePanel();
         }
         if (v == mCenterView) {
 //            mDragLayout.openPanelWithRatio(1.0f/2.0f);
