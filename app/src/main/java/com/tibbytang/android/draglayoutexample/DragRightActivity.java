@@ -50,60 +50,28 @@ public class DragRightActivity extends AppCompatActivity implements View.OnClick
         mDragLayout.addDragStateListener(new DragLayout.DragStateListener() {
             @Override
             public void onDragStateChanged(DragLayout.DragState dragState) {
-                if (dragState == DragLayout.DragState.DRAG_STATE_LEFT_OPEN) {
-                    Toast.makeText(DragRightActivity.this, "左边面板打开", Toast.LENGTH_SHORT).show();
+                if (dragState == DragLayout.DragState.DRAG_STATE_OPEN) {
+                    Toast.makeText(DragRightActivity.this, "面板打开", Toast.LENGTH_SHORT).show();
                 }
-                if (dragState == DragLayout.DragState.DRAG_STATE_LEFT_CLOSE) {
-                    Toast.makeText(DragRightActivity.this, "左边面板关闭", Toast.LENGTH_SHORT).show();
-                }
-
-                if (dragState == DragLayout.DragState.DRAG_STATE_RIGHT_OPEN) {
-                    Toast.makeText(DragRightActivity.this, "右边面板打开", Toast.LENGTH_SHORT).show();
-                }
-                if (dragState == DragLayout.DragState.DRAG_STATE_RIGHT_CLOSE) {
-                    Toast.makeText(DragRightActivity.this, "右边面板关闭", Toast.LENGTH_SHORT).show();
-                }
-
-                if (dragState == DragLayout.DragState.DRAG_STATE_TOP_OPEN) {
-                    Toast.makeText(DragRightActivity.this, "顶部面板打开", Toast.LENGTH_SHORT).show();
-                }
-                if (dragState == DragLayout.DragState.DRAG_STATE_TOP_CLOSE) {
-                    Toast.makeText(DragRightActivity.this, "顶部面板关闭", Toast.LENGTH_SHORT).show();
-                }
-
-                if (dragState == DragLayout.DragState.DRAG_STATE_BOTTOM_OPEN) {
-                    Toast.makeText(DragRightActivity.this, "底部面板打开", Toast.LENGTH_SHORT).show();
-                }
-                if (dragState == DragLayout.DragState.DRAG_STATE_BOTTOM_CLOSE) {
-                    Toast.makeText(DragRightActivity.this, "底部面板关闭", Toast.LENGTH_SHORT).show();
+                if (dragState == DragLayout.DragState.DRAG_STATE_CLOSE) {
+                    Toast.makeText(DragRightActivity.this, "面板关闭", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onDragEdgeChanged(DragLayout.DragEdgeState dragEdgeState) {
-                if (dragEdgeState == DragLayout.DragEdgeState.DRAG_STATE_BOTTOM_TO_TOP_EDGE) {
-                    Toast.makeText(DragRightActivity.this, "滑动到顶部", Toast.LENGTH_SHORT).show();
-                }
-                if (dragEdgeState == DragLayout.DragEdgeState.DRAG_STATE_TOP_TO_BOTTOM_EDGE) {
-                    Toast.makeText(DragRightActivity.this, "滑动到底部", Toast.LENGTH_SHORT).show();
-                }
-                if (dragEdgeState == DragLayout.DragEdgeState.DRAG_STATE_LEFT_TO_RIGHT_EDGE) {
-                    Toast.makeText(DragRightActivity.this, "滑动到右边", Toast.LENGTH_SHORT).show();
-                }
-                if (dragEdgeState == DragLayout.DragEdgeState.DRAG_STATE_RIGHT_TO_LEFT_EDGE) {
-                    Toast.makeText(DragRightActivity.this, "滑动到左边", Toast.LENGTH_SHORT).show();
+                if (dragEdgeState == DragLayout.DragEdgeState.DRAG_STATE_TO_EDGE) {
+                    Toast.makeText(DragRightActivity.this, "滑动到边缘", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
-            public void onDragViewClick(View view,int position, boolean isOpen) {
-                if (position == 1) {
+            public void onDragViewClick(View view, boolean isOpen) {
                     if (isOpen) {
-                        mDragLayout.moveRightViewWithRatio(1.0f);
+                        mDragLayout.openPanelWithRatio(0.0f);
                     } else {
-                        mDragLayout.moveRightViewWithRatio(1.0f/3.0f);
+                        mDragLayout.openPanelWithRatio(1.0f);
                     }
-                }
             }
         });
     }
@@ -132,19 +100,26 @@ public class DragRightActivity extends AppCompatActivity implements View.OnClick
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
+    @Override
     public void onClick(View v) {
 
         if (v == mLeftView) {
-            mDragLayout.moveRightViewWithRatio(1.0f);
+            mDragLayout.openPanelWithRatio(1.0f);
         }
         if (v == mRightView) {
-            mDragLayout.moveRightViewWithRatio(0.0f);
+            mDragLayout.openPanelWithRatio(0.0f);
         }
         if (v == mCenterView) {
-            mDragLayout.moveRightViewWithRatio(1.0f/2.0f);
+//            mDragLayout.openPanelWithRatio(1.0f/2.0f);
+            mDragLayout.setVisibility(View.VISIBLE);
+            mDragLayout.openPanelWithRatio(0.5f);
         }
         if (v==mThirdView){
-            mDragLayout.moveRightViewWithRatio(1.0f/3.0f);
+            mDragLayout.openPanelWithRatio(1.0f/3.0f);
         }
     }
 

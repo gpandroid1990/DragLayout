@@ -46,28 +46,30 @@
         android:id="@+id/main_drag_layout_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:visibility="invisible"
         app:drag_direction="right">
 
+        <FrameLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="right"
+            android:background="@color/colorAccent">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/right_drag_recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </FrameLayout>
+
+        <LinearLayout
+            android:layout_width="@dimen/drag_width"
+            android:layout_height="match_parent"
+            android:layout_gravity="right"
+            android:layout_marginTop="@dimen/drag_width"
+            android:layout_marginBottom="@dimen/drag_width"
+            android:background="#FF0000"
+            android:orientation="vertical"
+            android:visibility="visible" />
     </com.tibbytang.android.drag.DragLayout>
-    <FrameLayout
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_gravity="right"
-        android:background="@color/colorAccent">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/right_drag_recycler_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-    </FrameLayout>
-
-    <LinearLayout
-        android:layout_width="@dimen/drag_width"
-        android:layout_height="match_parent"
-        android:layout_gravity="right"
-        android:layout_marginTop="@dimen/drag_width"
-        android:layout_marginBottom="@dimen/drag_width"
-        android:background="#FF0000"
-        android:orientation="vertical"
-        android:visibility="visible" />
 </LinearLayout>

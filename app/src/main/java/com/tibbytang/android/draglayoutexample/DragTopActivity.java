@@ -50,53 +50,23 @@ public class DragTopActivity extends AppCompatActivity implements View.OnClickLi
         mDragLayout.addDragStateListener(new DragLayout.DragStateListener() {
             @Override
             public void onDragStateChanged(DragLayout.DragState dragState) {
-                if (dragState == DragLayout.DragState.DRAG_STATE_LEFT_OPEN) {
-                    Toast.makeText(DragTopActivity.this, "左边面板打开", Toast.LENGTH_SHORT).show();
+                if (dragState == DragLayout.DragState.DRAG_STATE_OPEN) {
+                    Toast.makeText(DragTopActivity.this, "面板打开", Toast.LENGTH_SHORT).show();
                 }
-                if (dragState == DragLayout.DragState.DRAG_STATE_LEFT_CLOSE) {
-                    Toast.makeText(DragTopActivity.this, "左边面板关闭", Toast.LENGTH_SHORT).show();
-                }
-
-                if (dragState == DragLayout.DragState.DRAG_STATE_RIGHT_OPEN) {
-                    Toast.makeText(DragTopActivity.this, "右边面板打开", Toast.LENGTH_SHORT).show();
-                }
-                if (dragState == DragLayout.DragState.DRAG_STATE_RIGHT_CLOSE) {
-                    Toast.makeText(DragTopActivity.this, "右边面板关闭", Toast.LENGTH_SHORT).show();
-                }
-
-                if (dragState == DragLayout.DragState.DRAG_STATE_TOP_OPEN) {
-                    Toast.makeText(DragTopActivity.this, "顶部面板打开", Toast.LENGTH_SHORT).show();
-                }
-                if (dragState == DragLayout.DragState.DRAG_STATE_TOP_CLOSE) {
-                    Toast.makeText(DragTopActivity.this, "顶部面板关闭", Toast.LENGTH_SHORT).show();
-                }
-
-                if (dragState == DragLayout.DragState.DRAG_STATE_BOTTOM_OPEN) {
-                    Toast.makeText(DragTopActivity.this, "底部面板打开", Toast.LENGTH_SHORT).show();
-                }
-                if (dragState == DragLayout.DragState.DRAG_STATE_BOTTOM_CLOSE) {
-                    Toast.makeText(DragTopActivity.this, "底部面板关闭", Toast.LENGTH_SHORT).show();
+                if (dragState == DragLayout.DragState.DRAG_STATE_CLOSE) {
+                    Toast.makeText(DragTopActivity.this, "面板关闭", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onDragEdgeChanged(DragLayout.DragEdgeState dragEdgeState) {
-                if (dragEdgeState == DragLayout.DragEdgeState.DRAG_STATE_BOTTOM_TO_TOP_EDGE) {
-                    Toast.makeText(DragTopActivity.this, "滑动到顶部", Toast.LENGTH_SHORT).show();
-                }
-                if (dragEdgeState == DragLayout.DragEdgeState.DRAG_STATE_TOP_TO_BOTTOM_EDGE) {
-                    Toast.makeText(DragTopActivity.this, "滑动到底部", Toast.LENGTH_SHORT).show();
-                }
-                if (dragEdgeState == DragLayout.DragEdgeState.DRAG_STATE_LEFT_TO_RIGHT_EDGE) {
-                    Toast.makeText(DragTopActivity.this, "滑动到右边", Toast.LENGTH_SHORT).show();
-                }
-                if (dragEdgeState == DragLayout.DragEdgeState.DRAG_STATE_RIGHT_TO_LEFT_EDGE) {
-                    Toast.makeText(DragTopActivity.this, "滑动到左边", Toast.LENGTH_SHORT).show();
+                if (dragEdgeState == DragLayout.DragEdgeState.DRAG_STATE_TO_EDGE) {
+                    Toast.makeText(DragTopActivity.this, "滑动到边缘", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
-            public void onDragViewClick(View view,int position, boolean isOpen) {
+            public void onDragViewClick(View view, boolean isOpen) {
 
             }
         });
@@ -129,16 +99,16 @@ public class DragTopActivity extends AppCompatActivity implements View.OnClickLi
     public void onClick(View v) {
 
         if (v == mTopView) {
-            mDragLayout.moveTopViewWithRatio(0.0f);
+            mDragLayout.openPanelWithRatio(0.0f);
         }
         if (v == mBottomView) {
-            mDragLayout.moveTopViewWithRatio(1.0f);
+            mDragLayout.openPanelWithRatio(1.0f);
         }
         if (v == mCenterView) {
-            mDragLayout.moveTopViewWithRatio(1.0f/2.0f);
+            mDragLayout.openPanelWithRatio(1.0f/2.0f);
         }
         if (v==mThirdView){
-            mDragLayout.moveTopViewWithRatio(1.0f/3.0f);
+            mDragLayout.openPanelWithRatio(1.0f/3.0f);
         }
     }
 

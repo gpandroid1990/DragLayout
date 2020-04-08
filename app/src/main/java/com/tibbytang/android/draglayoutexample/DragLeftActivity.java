@@ -64,59 +64,27 @@ public class DragLeftActivity extends AppCompatActivity implements View.OnClickL
         mDragLayout.addDragStateListener(new DragLayout.DragStateListener() {
             @Override
             public void onDragStateChanged(DragLayout.DragState dragState) {
-                if (dragState == DragLayout.DragState.DRAG_STATE_LEFT_OPEN) {
-                    Toast.makeText(DragLeftActivity.this, "左边面板打开", Toast.LENGTH_SHORT).show();
+                if (dragState == DragLayout.DragState.DRAG_STATE_OPEN) {
+                    Toast.makeText(DragLeftActivity.this, "面板打开", Toast.LENGTH_SHORT).show();
                 }
-                if (dragState == DragLayout.DragState.DRAG_STATE_LEFT_CLOSE) {
-                    Toast.makeText(DragLeftActivity.this, "左边面板关闭", Toast.LENGTH_SHORT).show();
-                }
-
-                if (dragState == DragLayout.DragState.DRAG_STATE_RIGHT_OPEN) {
-                    Toast.makeText(DragLeftActivity.this, "右边面板打开", Toast.LENGTH_SHORT).show();
-                }
-                if (dragState == DragLayout.DragState.DRAG_STATE_RIGHT_CLOSE) {
-                    Toast.makeText(DragLeftActivity.this, "右边面板关闭", Toast.LENGTH_SHORT).show();
-                }
-
-                if (dragState == DragLayout.DragState.DRAG_STATE_TOP_OPEN) {
-                    Toast.makeText(DragLeftActivity.this, "顶部面板打开", Toast.LENGTH_SHORT).show();
-                }
-                if (dragState == DragLayout.DragState.DRAG_STATE_TOP_CLOSE) {
-                    Toast.makeText(DragLeftActivity.this, "顶部面板关闭", Toast.LENGTH_SHORT).show();
-                }
-
-                if (dragState == DragLayout.DragState.DRAG_STATE_BOTTOM_OPEN) {
-                    Toast.makeText(DragLeftActivity.this, "底部面板打开", Toast.LENGTH_SHORT).show();
-                }
-                if (dragState == DragLayout.DragState.DRAG_STATE_BOTTOM_CLOSE) {
-                    Toast.makeText(DragLeftActivity.this, "底部面板关闭", Toast.LENGTH_SHORT).show();
+                if (dragState == DragLayout.DragState.DRAG_STATE_CLOSE) {
+                    Toast.makeText(DragLeftActivity.this, "面板关闭", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onDragEdgeChanged(DragLayout.DragEdgeState dragEdgeState) {
-                if (dragEdgeState == DragLayout.DragEdgeState.DRAG_STATE_BOTTOM_TO_TOP_EDGE) {
-                    Toast.makeText(DragLeftActivity.this, "滑动到顶部", Toast.LENGTH_SHORT).show();
-                }
-                if (dragEdgeState == DragLayout.DragEdgeState.DRAG_STATE_TOP_TO_BOTTOM_EDGE) {
-                    Toast.makeText(DragLeftActivity.this, "滑动到底部", Toast.LENGTH_SHORT).show();
-                }
-                if (dragEdgeState == DragLayout.DragEdgeState.DRAG_STATE_LEFT_TO_RIGHT_EDGE) {
-                    Toast.makeText(DragLeftActivity.this, "滑动到右边", Toast.LENGTH_SHORT).show();
-                }
-                if (dragEdgeState == DragLayout.DragEdgeState.DRAG_STATE_RIGHT_TO_LEFT_EDGE) {
-                    Toast.makeText(DragLeftActivity.this, "滑动到左边", Toast.LENGTH_SHORT).show();
+                if (dragEdgeState == DragLayout.DragEdgeState.DRAG_STATE_TO_EDGE) {
+                    Toast.makeText(DragLeftActivity.this, "滑动到边缘", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
-            public void onDragViewClick(View view, int position, boolean isOpen) {
-                if (position == 0) {
+            public void onDragViewClick(View view, boolean isOpen) {
                     if (isOpen) {
-                        mDragLayout.moveLeftViewWithRatio(0.0f);
+                        mDragLayout.openPanelWithRatio(0.0f);
                     } else {
-                        mDragLayout.moveLeftViewWithRatio(1.0f);
-                    }
+                        mDragLayout.openPanelWithRatio(1.0f);
                 }
             }
         });
@@ -149,28 +117,26 @@ public class DragLeftActivity extends AppCompatActivity implements View.OnClickL
     public void onClick(View v) {
 
         if (v == mLeftView) {
-            mDragLayout.moveLeftViewWithRatio(0.0f);
+            mDragLayout.openPanelWithRatio(0.0f);
         }
         if (v == mRightView) {
-            mDragLayout.moveLeftViewWithRatio(1.0f);
+            mDragLayout.openPanelWithRatio(1.0f);
         }
         if (v == mCenterView) {
-            mDragLayout.moveLeftViewWithRatio(1.0f / 2.0f);
+            mDragLayout.openPanelWithRatio(1.0f / 2.0f);
         }
         if (v == mThirdView) {
-            mDragLayout.moveLeftViewWithRatio(1.0f / 3.0f);
+            mDragLayout.openPanelWithRatio(1.0f / 3.0f);
         }
         if (v == mShowView) {
-//            mDragLayout.setVisibility(View.VISIBLE);
             mDragContainerView.setVisibility(View.VISIBLE);
         }
         if (v == mHideView) {
-//            mDragLayout.setVisibility(View.GONE);
             mDragContainerView.setVisibility(View.GONE);
         }
 
         if (v==mGetStateView){
-            XLog.d("dragLayout open state :"+mDragLayout.isLeftPanelOpen());
+            XLog.d("dragLayout open state :"+mDragLayout.isOpen());
         }
     }
 
