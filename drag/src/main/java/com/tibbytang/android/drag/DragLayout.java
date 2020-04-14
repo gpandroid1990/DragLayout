@@ -101,6 +101,7 @@ public class DragLayout extends FrameLayout implements View.OnTouchListener {
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
+        XLog.d("onFinishInflate");
         if (getChildCount() == 2) {
             mContentViewGrop = getChildAt(0);
             LayoutParams layoutParams = (LayoutParams) mContentViewGrop.getLayoutParams();
@@ -282,6 +283,7 @@ public class DragLayout extends FrameLayout implements View.OnTouchListener {
         XLog.d(TAG + " onMeasure");
         int sizeWidth = MeasureSpec.getSize(widthMeasureSpec);
         int sizeHeight = MeasureSpec.getSize(heightMeasureSpec);
+        XLog.d("sizeWidth=" + sizeWidth + " sizeHeight=" + sizeHeight);
         measureChildren(widthMeasureSpec, heightMeasureSpec);
         setMeasuredDimension(sizeWidth, sizeHeight);
     }
@@ -335,6 +337,59 @@ public class DragLayout extends FrameLayout implements View.OnTouchListener {
                             childView.layout((getWidth() - measureWidth) / 2, getHeight() - measureHeight - mBottomHeight, getWidth() / 2 + measureWidth / 2, getHeight() - mBottomHeight);
                         }
                     }
+                }
+            }
+        }
+    }
+
+    @Override
+    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+        super.onSizeChanged(w, h, oldw, oldh);
+        XLog.d("onSizeChanged w=" + w + " h=" + h + " oldw=" + oldw + " oldh=" + oldh);
+        if (oldw > 0 && oldh > 0) {
+            if (mDragDirection == 0) {
+                if (mLeftWidth > 0) {
+                    mLeftWidth = (int) ((float) w / (float) oldw * mLeftWidth);
+                    postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            moveLeftView(mLeftWidth);
+                        }
+                    },100);
+                }
+            }
+            if (mDragDirection == 1) {
+                if (mRightWidth > 0) {
+                    mRightWidth = (int) ((float) w / (float) oldw * mRightWidth);
+                    postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            moveRightView(mRightWidth);
+                        }
+                    },100);
+                }
+            }
+
+            if (mDragDirection == 2) {
+                if (mTopHeight > 0) {
+                    mTopHeight = (int) ((float) h / (float) oldh * mTopHeight);
+                    postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            moveTopView(mTopHeight);
+                        }
+                    },100);
+                }
+            }
+            if (mDragDirection == 3) {
+                if (mBottomHeight > 0) {
+                    mBottomHeight = (int) ((float) h / (float) oldh * mBottomHeight);
+                    postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            moveBottomView(mBottomHeight);
+                        }
+                    },100);
                 }
             }
         }

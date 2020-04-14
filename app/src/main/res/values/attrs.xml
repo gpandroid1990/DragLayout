@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 自定义固定比例容器 -->
+    <declare-styleable name="StoneFiexedLayout">
+        <attr name="demoHeight" format="integer" />
+        <attr name="demoWidth" format="integer" />
+        <attr name="standard" format="string" />
+    </declare-styleable>
+</resources>

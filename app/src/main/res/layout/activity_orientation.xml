@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".orientation.OrientationActivity">
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/orientation_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:text="Orientation"
+        android:textColor="@color/colorPrimary"
+        android:textSize="72sp"
+        android:visibility="visible" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+
+<!--        <View-->
+<!--            android:id="@+id/imageView"-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="200dp"-->
+<!--            android:layout_marginStart="16dp"-->
+<!--            android:layout_marginTop="16dp"-->
+<!--            android:background="@color/colorPrimary"-->
+<!--            app:layout_constraintDimensionRatio="h,5:5" />-->
+
+        <!--        <android.support.constraint.Guideline-->
+        <!--            android:id="@+id/guideline"-->
+        <!--            android:layout_width="wrap_content"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:orientation="vertical"-->
+        <!--            app:layout_constraintGuide_percent="0.39" />-->
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>
