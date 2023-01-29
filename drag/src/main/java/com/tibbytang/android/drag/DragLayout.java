@@ -355,7 +355,7 @@ public class DragLayout extends FrameLayout implements View.OnTouchListener {
                         public void run() {
                             moveLeftView(mLeftWidth);
                         }
-                    },100);
+                    }, 100);
                 }
             }
             if (mDragDirection == 1) {
@@ -366,7 +366,7 @@ public class DragLayout extends FrameLayout implements View.OnTouchListener {
                         public void run() {
                             moveRightView(mRightWidth);
                         }
-                    },100);
+                    }, 100);
                 }
             }
 
@@ -378,7 +378,7 @@ public class DragLayout extends FrameLayout implements View.OnTouchListener {
                         public void run() {
                             moveTopView(mTopHeight);
                         }
-                    },100);
+                    }, 100);
                 }
             }
             if (mDragDirection == 3) {
@@ -389,7 +389,7 @@ public class DragLayout extends FrameLayout implements View.OnTouchListener {
                         public void run() {
                             moveBottomView(mBottomHeight);
                         }
-                    },100);
+                    }, 100);
                 }
             }
         }
@@ -451,7 +451,7 @@ public class DragLayout extends FrameLayout implements View.OnTouchListener {
                 XLog.d(TAG + "抬起 mMoveTime=" + mMoveTime + " TAP_TIME_OUT=" + TAP_TIME_OUT + " mMoveX=" + mMoveX + " mMoveY=" + mMoveY);
                 if (mMoveTime < TAP_TIME_OUT && mMoveX < MOVE_DISTANCE && mMoveY < MOVE_DISTANCE) {
                     // 点击事件
-                    if (isNotFastClick()) {
+                    if (isNotFastClick() && null != mDragListener) {
                         mDragListener.onDragViewClick(view, mIsOpen);
                     }
                 }
@@ -496,7 +496,7 @@ public class DragLayout extends FrameLayout implements View.OnTouchListener {
                 XLog.d(TAG + "抬起 mMoveTime=" + mMoveTime + " TAP_TIME_OUT=" + TAP_TIME_OUT + " mMoveX=" + mMoveX + " mMoveY=" + mMoveY);
                 if (mMoveTime < TAP_TIME_OUT && mMoveX < MOVE_DISTANCE && mMoveY < MOVE_DISTANCE) {
                     // 点击事件
-                    if (isNotFastClick()) {
+                    if (isNotFastClick() && null != mDragListener) {
                         mDragListener.onDragViewClick(view, mIsOpen);
                     }
                 }
@@ -541,7 +541,7 @@ public class DragLayout extends FrameLayout implements View.OnTouchListener {
                 XLog.d(TAG + "抬起 mMoveTime=" + mMoveTime + " TAP_TIME_OUT=" + TAP_TIME_OUT + " mMoveX=" + mMoveX + " mMoveY=" + mMoveY);
                 if (mMoveTime < TAP_TIME_OUT && mMoveX < MOVE_DISTANCE && mMoveY < MOVE_DISTANCE) {
                     // 点击事件
-                    if (isNotFastClick()) {
+                    if (isNotFastClick() && null != mDragListener) {
                         mDragListener.onDragViewClick(view, mIsOpen);
                     }
                 }
@@ -586,7 +586,7 @@ public class DragLayout extends FrameLayout implements View.OnTouchListener {
                 XLog.d(TAG + "抬起 mMoveTime=" + mMoveTime + " TAP_TIME_OUT=" + TAP_TIME_OUT + " mMoveX=" + mMoveX + " mMoveY=" + mMoveY);
                 if (mMoveTime < TAP_TIME_OUT && mMoveX < MOVE_DISTANCE && mMoveY < MOVE_DISTANCE) {
                     // 点击事件
-                    if (isNotFastClick()) {
+                    if (isNotFastClick() && null != mDragListener) {
                         mDragListener.onDragViewClick(view, mIsOpen);
                     }
                 }
